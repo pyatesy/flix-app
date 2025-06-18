@@ -4,22 +4,16 @@ import MovieSlider from '../components/MovieSlider';
 import FeaturedMovies from '../components/FeaturedMovies';
 import Hero from '../components/Hero';
 import Genre from '../components/Genre';
-import HotPicksSlider from '../components/HotPicksSlider';
 import { useDecision } from '@optimizely/react-sdk';
 import { useUserId } from '../contexts/UserContext';
+import { useMovieData } from '../hooks/useMovieData';
 
 //import { generateUserId } from '../utils/userId';
-import { 
-  movieDatabase, 
-  genres
-} from '../data/movies';
-
 
 const Home: React.FC = () => {
   const { userId } = useUserId();
   const [decision] = useDecision('dragon-recommendation-2');
-
- 
+  const { movies: movieDatabase, genres } = useMovieData();
 
   return (
     <div className="main-content">    

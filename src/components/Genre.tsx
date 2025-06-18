@@ -4,10 +4,11 @@ import Swiper from 'swiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { genres } from '../data/movies';
+import { useMovieData } from '../hooks/useMovieData';
 
 const Genre: React.FC = () => {
   const genreSliderRef = useRef<Swiper | null>(null);
+  const { genres } = useMovieData();
   
   useEffect(() => {
     genreSliderRef.current = new Swiper('.genre-slider', {
@@ -37,7 +38,7 @@ const Genre: React.FC = () => {
         genreSliderRef.current.destroy();
       }
     };
-  }, []);
+  }, [genres]);
 
   return (
     <section className="genre-section fix section-padding pt-0">

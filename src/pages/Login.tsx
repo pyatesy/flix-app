@@ -1,14 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useThemeAssets } from '../hooks/useThemeAssets';
 
 const Login: React.FC = () => {
+  const { logoUrl, breadcrumbBackgroundUrl } = useThemeAssets();
+
   return (
     <>
       {/* Breadcrumb Section */}
-      <div className="breadcrumb-wrapper bg-cover" style={{ backgroundImage: "url('/assets/img/breadcrumb-bg.jpg')" }}>
-        <div className="container">
+      <div className="breadcrumb-wrapper bg-cover" style={{ backgroundImage: `url(${breadcrumbBackgroundUrl})` }}>
+        <div className="container-fluid">
           <div className="page-heading">
             <div className="page-header-left">
+              <div className="logo">                  
+                <img src={logoUrl} alt="img" width={300}/>
+              </div>
               <h1 className="wow fadeInUp" data-wow-delay=".3s">Log in</h1>
               <ul className="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
                 <li>

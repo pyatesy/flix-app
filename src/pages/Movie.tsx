@@ -3,23 +3,23 @@ import { Link } from 'react-router-dom';
 import MovieSlider from '../components/MovieSlider';
 import FeaturedMovies from '../components/FeaturedMovies';
 import { useMovieUrl } from '../hooks/useMovieUrl';
-import { 
-  movieDatabase,
-  genres 
-} from '../data/movies';
+import { useMovieData } from '../hooks/useMovieData';
+import { useThemeAssets } from '../hooks/useThemeAssets';
 
-const recentlyViewed = movieDatabase
+/*const recentlyViewed = movieDatabase
 .filter(movie => movie.featured === true)
-.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
+.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));*/
 
 
 const Movie: React.FC = () => {
-  const { getMoviePath } = useMovieUrl();
+  //const { getMoviePath } = useMovieUrl();
+  const { breadcrumbBackgroundUrl } = useThemeAssets();
+  const { movies: movieDatabase, genres } = useMovieData();
 
   return (
     <div className="movie-page">
       {/* Breadcrumb Section */}
-      <div className="breadcrumb-wrapper" style={{ backgroundImage: "url('/assets/img/breadcrumb-bg.jpg')" }}>
+      <div className="breadcrumb-wrapper" style={{ backgroundImage: `url(${breadcrumbBackgroundUrl})` }}>
         <div className="container">
           <div className="page-heading">
             <div className="page-header-left">

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Movie, Genre } from '../types/movie';
-import { movieDatabase, genres, actors } from '../data/movies';
+import { useMovieData } from '../hooks/useMovieData';
 //import 'swiper/css';
 //import 'swiper/css/navigation';
 //import 'swiper/css/pagination';
@@ -20,6 +20,7 @@ const MovieDetails: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [movieGenres, setMovieGenres] = useState<Genre[]>([]);
+  const { movies: movieDatabase, genres, actors } = useMovieData();
 
   useEffect(() => {
     if (!slug) return;
@@ -30,11 +31,11 @@ const MovieDetails: React.FC = () => {
       setMovie(foundMovie);
       // Get genre details for the movie
       const movieGenreDetails = foundMovie.genres
-        .map(genreId => genres.find(g => g.id === genreId))
-        .filter((genre): genre is Genre => genre !== undefined);
+        .map((genreId: number) => genres.find(g => g.id === genreId))
+        .filter((genre: Genre | undefined): genre is Genre => genre !== undefined);
       setMovieGenres(movieGenreDetails);
     }
-  }, [slug]);
+  }, [slug, movieDatabase, genres]);
 
 
   if (!movie) {

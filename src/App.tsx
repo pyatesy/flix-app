@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import LoadingOverlay from './components/LoadingOverlay';
 import RegionOverlay from './components/RegionOverlay';
+import ThemeProvider from './components/ThemeProvider';
 
 const AppContent: React.FC = () => {
   const { userId } = useUserId();
@@ -96,7 +97,9 @@ const App: React.FC = () => {
           }
         }}
       >
-        <AppContent />
+        <ThemeProvider>
+          <AppContent />
+        </ThemeProvider>
       </OptimizelyProvider>
     </UserProvider>
   );

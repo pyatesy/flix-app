@@ -13,6 +13,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   const [dragonDecision] = useDecision('dragon-recommendation-2');
   const [subscriptionDecision] = useDecision('subscription_tiers');
   const [notAvailableDecision] = useDecision('not_available');
+  const [themeCustomizationDecision] = useDecision('theme_customization');
   const sdkKey = localStorage.getItem('optimizely_sdk_key') || 'VcBzHwxVF7kba7WCvzSfW';
   const [country, setCountry] = useState(localStorage.getItem('user_country') || '');
   const [device, setDevice] = useState(localStorage.getItem('device') || 'browser');
@@ -191,6 +192,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
             {renderFeatureFlagInfo(dragonDecision, 'dragon-recommendation-2')}
             {renderFeatureFlagInfo(notAvailableDecision, 'not_available')}
             {renderFeatureFlagInfo(subscriptionDecision, 'subscription_tiers')}
+            {renderFeatureFlagInfo(themeCustomizationDecision, 'theme_customization')}
             
           </div>
         </div>

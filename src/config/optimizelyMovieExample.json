@@ -1,0 +1,44 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "Custom Movie Title",
+      "slug": "custom-movie-title",
+      "image": "https://images.example.com/custom-movie.jpg",
+      "largeImage": "https://images.example.com/custom-movie-large.jpg",
+      "duration": "2h 15m",
+      "quality": "4K",
+      "genres": [1, 4],
+      "rating": "4.8",
+      "year": "2024",
+      "number": "01",
+      "recentlyViewed": "2024-01-15T00:00:00.000Z",
+      "featured": true,
+      "trending": true,
+      "director": ["Custom Director"],
+      "production": ["Custom Production"],
+      "linkToVideo": "https://www.youtube.com/watch?v=example",
+      "cast": [1, 2],
+      "language": ["English", "Spanish"],
+      "description": "This is a custom movie description that can be controlled via Optimizely."
+    }
+  ],
+  "genres": [
+    {
+      "id": 1,
+      "name": "Custom Action",
+      "description": "Custom high-energy films with physical stunts and chases",
+      "icon": "fa-fire",
+      "color": "#FF0000",
+      "slug": "custom-action",
+      "image": "https://images.example.com/custom-action.jpg"
+    }
+  ],
+  "actors": [
+    {
+      "id": 1,
+      "name": "Custom Actor Name",
+      "image": "https://images.example.com/custom-actor.jpg"
+    }
+  ]
+} 

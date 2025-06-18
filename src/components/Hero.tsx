@@ -74,7 +74,7 @@ const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies, trendingMovies })
   }, []);
 
   return (
-    <section className="hero-section section-padding bg-cover" style={{ backgroundImage: "url('/assets/img/dark-gradient-bg.jpg')" }}>
+    <section className="hero-section section-padding bg-cover backgroundGradient" >
       <div className="hero-1">
         <div className="container-fluid">
           <div className="row g-4">

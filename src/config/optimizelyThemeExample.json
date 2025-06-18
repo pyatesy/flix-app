@@ -1,0 +1,27 @@
+{
+  "colors": {
+    "theme": "#FF6B35",
+    "theme2": "#F7931E",
+    "theme3": "#FFD23F",
+    "theme4": "#2C3E50",
+    "body": "#fff",
+    "black": "#000",
+    "white": "#eee",
+    "header": "#1A1A2E",
+    "text": "#7d7d7d",
+    "border": "#E8E8E8",
+    "border2": "#D4DCED",
+    "bg": "#16213E",
+    "bg2": "#0F3460"
+  },
+  "assets": {
+    "logoUrl": "/assets/img/logo/white-logo.png",
+    "breadcrumbBackgroundUrl": "/assets/img/breadcrumb-bg.jpg"
+  },
+  "fonts": {
+    "family": "\"Barlow Condensed\", sans-serif"
+  },
+  "shadows": {
+    "boxShadow": "0px 1px 14px 0px rgba(0, 0, 0, 0.13)"
+  }
+} 

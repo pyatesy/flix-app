@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SidePanel from './SidePanel';
+import { useThemeAssets } from '../hooks/useThemeAssets';
 
 const Header: React.FC = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const { logoUrl } = useThemeAssets();
 
   const togglePanel = () => {
     setIsPanelOpen(!isPanelOpen);
@@ -18,7 +20,7 @@ const Header: React.FC = () => {
               <div className="header-left">
                 <div className="logo">
                   <Link to="/" className="header-logo">
-                    <img src="/assets/img/logo/white-logo.png" alt="logo-img" width={100}/>
+                    <img src={logoUrl} alt="logo-img" width={100}/>
                   </Link>
                 </div>
               </div>

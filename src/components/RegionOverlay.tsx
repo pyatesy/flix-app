@@ -4,11 +4,13 @@ import { useDecision } from '@optimizely/react-sdk';
 import { useUserId } from '../contexts/UserContext';
 import optimizelyClient from '../config/optimizely';
 import { Link } from 'react-router-dom';
+import { useThemeAssets } from '../hooks/useThemeAssets';
 
 const RegionOverlay: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { userId } = useUserId();
+  const { logoUrl, breadcrumbBackgroundUrl } = useThemeAssets();
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
@@ -51,12 +53,12 @@ const RegionOverlay: React.FC = () => {
                   </div>
               </div>
     <div className="overlay-content-fluid w-100">
-      <div className="breadcrumb-wrapper" style={{ backgroundImage: "url('/assets/img/breadcrumb-bg.jpg')" }}>
+      <div className="breadcrumb-wrapper" style={{ backgroundImage: `url(${breadcrumbBackgroundUrl})` }}>
         <div className="container-fluid">
           <div className="page-heading">
             <div className="page-header-left">
             <div className="logo">                  
-                    <img src="/assets/img/logo/white-logo.png" alt="logo-img" width={300}/>
+                    <img src={logoUrl} alt="logo-img" width={300}/>
                 </div>
                 <br/>
                 <br/>

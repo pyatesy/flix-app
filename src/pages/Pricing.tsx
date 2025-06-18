@@ -4,9 +4,11 @@ import { useDecision } from '@optimizely/react-sdk';
 import { OptimizelyPricingData } from '../types/optimizely';
 import { pricingData } from '../data/pricingData';
 import { useUserId } from '../contexts/UserContext';
+import { useThemeAssets } from '../hooks/useThemeAssets';
 
 const Pricing: React.FC = () => {
   const { userId } = useUserId();
+  const { breadcrumbBackgroundUrl } = useThemeAssets();
   
   // Get the feature flag decision and variables
   const [decision] = useDecision('subscription_tiers');
@@ -41,9 +43,9 @@ const Pricing: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="pricing-page">
       {/* Breadcrumb Section */}
-      <div className="breadcrumb-wrapper bg-cover" style={{ backgroundImage: "url('/assets/img/breadcrumb-bg.jpg')" }}>
+      <div className="breadcrumb-wrapper bg-cover" style={{ backgroundImage: `url(${breadcrumbBackgroundUrl})` }}>
         <div className="container">
           <div className="page-heading">
             <div className="page-header-left">

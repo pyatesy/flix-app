@@ -1,6 +1,7 @@
-# WowTube - OTT Platform and Video Streaming
+# Flix - OTT Platform and Video Streaming
 
 A modern OTT platform and video streaming application built with React and TypeScript.
+Based on the WOW Tube template under the MIT licence
 
 ## Features
 

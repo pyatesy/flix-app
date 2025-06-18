@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import MovieSlider from '../components/MovieSlider';
+import FeaturedMovies from '../components/FeaturedMovies';
 import { useMovieUrl } from '../hooks/useMovieUrl';
 import { 
   movieDatabase,
-  //featuredMovies, 
-  heroMovies, 
   genres 
 } from '../data/movies';
 
@@ -34,67 +33,10 @@ const Movie: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Featured Movie Section */}
-      
-      <section className="featured-movie-section section-padding">
+            {/* Featured Today Section */}
+      <section className="feature-movie-section fix section-padding pt-0">
         <div className="container">
-          <div className="row">
-            <div className="col-lg-8">
-              <div className="featured-movie-main">
-                <div className="movie-card">
-                  <div className="movie-thumb">
-                    <img src={recentlyViewed[0].image} alt={recentlyViewed[0].title} />
-                    <div className="movie-overlay">
-                      <div className="movie-info">
-                        <h3>{recentlyViewed[0].title}</h3>
-                        <div className="movie-meta">
-                          <span><i className="fas fa-star"></i> {recentlyViewed[0].rating}</span>
-                          <span><i className="fas fa-clock"></i> {recentlyViewed[0].duration}</span>
-                          <span><i className="fas fa-film"></i> {recentlyViewed[0].quality}</span>
-                        </div>
-                        <div className="movie-year">
-                          <span>{recentlyViewed[0].year}</span>
-                          <span>{recentlyViewed[0].genre}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="featured-movie-sidebar">
-                <div className="section-title-area">
-                  <div className="section-title">
-                    <h2>Featured Movies</h2>
-                  </div>
-                </div>
-                <div className="featured-movie-list">
-                  {movieDatabase
-                    .sort((a, b) => a.title.localeCompare(b.title))
-                    .filter(movie => movie.genres.includes(2))
-                    .slice(0, 2)
-                    .map((movie) => (
-                    <div key={movie.id} className="featured-movie-item">
-                      <div className="movie-thumb">
-                        <img src={movie.image} alt={movie.title} />
-                        <div className="movie-overlay">
-                          <div className="movie-info">
-                            <h4>{movie.title}</h4>
-                            <div className="movie-meta">
-                              <span><i className="fas fa-star"></i> {movie.rating}</span>
-                              <span><i className="fas fa-clock"></i> {movie.duration}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <FeaturedMovies mainMovie={movieDatabase.sort((a, b) => Number(b.rating) - Number(a.rating)).filter(movie => movie.featured)[0]} sideMovies={movieDatabase.sort((a, b) => Number(b.rating) - Number(a.rating)).filter(movie => movie.featured).slice(1,5)} />
         </div>
       </section>
 
@@ -102,9 +44,6 @@ const Movie: React.FC = () => {
       <section className="trending-section-2 section-padding section-bg-2">
         <div className="container-fluid">
           <div className="section-title-area">
-            <div className="section-title">
-              <h2>Movie Trailers</h2>
-            </div>
           </div>
           <MovieSlider movies={movieDatabase} genres={genres} title="Recommended Movies" sliderId='recommended-movies' />
         </div>
@@ -114,7 +53,7 @@ const Movie: React.FC = () => {
       <section className="popular-movie-section-2 fix section-padding section-bg-2">
         <div className="container-fluid">
           <div className="section-title text-center wow fadeInUp" data-wow-delay=".3s">
-            <h2><img src="/assets/img/lightning.png" alt="img" />popular movies</h2>
+            <h2><i className="fa-solid fa-crown" /> popular movies</h2>
           </div>
           <div className="trending-wrapper-2 style-2">
             <div className="row">

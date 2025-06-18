@@ -10,9 +10,7 @@ import { useUserId } from '../contexts/UserContext';
 
 //import { generateUserId } from '../utils/userId';
 import { 
-  movieDatabase,
-//
-  heroMovies, 
+  movieDatabase, 
   genres
 } from '../data/movies';
 
@@ -26,7 +24,16 @@ const Home: React.FC = () => {
   return (
     <div className="main-content">    
       {/* Hero Section */}
-      <Hero mainMovies={heroMovies.mainMovies} sliderMovies={heroMovies.sliderMovies} />
+      <Hero mainMovies={movieDatabase
+.filter(movie => movie.featured === true)
+.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0)).slice(0,2)} 
+sliderMovies={movieDatabase
+.filter(movie => movie.featured === true)
+.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0)).slice(2)} 
+trendingMovies={movieDatabase
+.filter(movie => movie.trending === true)
+.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0)).slice(0,1)} 
+/>
       
       {/* Recommended Movies Section */}
       <section className="upcoming-movie-section fix section-padding">
@@ -53,7 +60,7 @@ const Home: React.FC = () => {
       {/* Featured Today Section */}
       <section className="feature-movie-section fix section-padding pt-0">
         <div className="container">
-          <FeaturedMovies mainMovie={movieDatabase.sort((a, b) => Number(b.rating) - Number(a.rating)).filter(movie => movie.featured)[0]} sideMovies={movieDatabase.sort((a, b) => Number(b.rating) - Number(a.rating)).filter(movie => movie.featured).slice(1,3)} />
+          <FeaturedMovies mainMovie={movieDatabase.sort((a, b) => Number(b.rating) - Number(a.rating)).filter(movie => movie.featured)[0]} sideMovies={movieDatabase.sort((a, b) => Number(b.rating) - Number(a.rating)).filter(movie => movie.featured).slice(1,5)} />
         </div>
       </section>
 

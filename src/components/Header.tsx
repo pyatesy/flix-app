@@ -32,7 +32,7 @@ const Header: React.FC = () => {
                       <li>
                         <Link to="/movies">Movies</Link>
                       </li>
-                      <li>
+                      {/*<li>
                         <Link to="/tv-shows">TV Shows</Link>
                       </li>
                       <li className="has-dropdown">
@@ -53,7 +53,7 @@ const Header: React.FC = () => {
                           <li><Link to="/blog-details">Blog Details</Link></li>
                         </ul>
                       </li>
-                      <li><Link to="/contact">Contact Us</Link></li>
+                      <li><Link to="/contact">Contact Us</Link></li>*/}
                     </ul>
                   </nav>
                 </div>
@@ -66,15 +66,12 @@ const Header: React.FC = () => {
                 </div>
                 <div className="header-button">
                   <Link to="/pricing" className="theme-btn">
-                    subscribe <img src="/assets/img/diamond.png" alt="img" />
+                    subscribe <div className="fas fa-gem"></div>
                   </Link>
                   <Link to="/login" className="theme-btn style-2">
-                    sign in <img src="/assets/img/user.png" alt="img" />
+                    sign in <div className="fas fa-user"></div>
                   </Link>
                 </div>
-                <Link to="/login">
-                  <img src="/assets/img/bell.png" alt="img" />
-                </Link>
                 <div className="header__hamburger">
                   <div className="sidebar__toggle" onClick={togglePanel}>
                     <i className="fas fa-bars"></i>

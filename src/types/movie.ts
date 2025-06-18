@@ -17,6 +17,7 @@ export interface Movie {
   featured?: boolean;
   largeImage?: string;
   heroImage?: string;
+  trending?: boolean;
   description?: string;
   language?: string[];
   director?: string[];

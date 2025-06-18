@@ -9,8 +9,10 @@ import Home from './pages/Home';
 import Movie from './pages/Movie';
 import MovieDetails from './pages/MovieDetails';
 import Pricing from './pages/Pricing';
+import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import LoadingOverlay from './components/LoadingOverlay';
+import RegionOverlay from './components/RegionOverlay';
 
 const AppContent: React.FC = () => {
   const { userId } = useUserId();
@@ -61,6 +63,7 @@ const AppContent: React.FC = () => {
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/movie" element={<Movie />} />
             <Route path="/movies" element={<Movie />} />
             <Route path="/movie/:slug" element={<MovieDetails />} />
@@ -72,6 +75,7 @@ const AppContent: React.FC = () => {
         <div id="back-top">
           <i className="fa-solid fa-chevron-up"></i>
         </div>
+        <RegionOverlay />
       </div>
     </Router>
   );
@@ -88,7 +92,7 @@ const App: React.FC = () => {
             device: localStorage.getItem('device') || '',
             browser: localStorage.getItem('browser') || '',
             os: localStorage.getItem('os') || '',
-            location: localStorage.getItem('country') || ''
+            location: localStorage.getItem('user_country') || '',
           }
         }}
       >

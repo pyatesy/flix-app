@@ -2,28 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
-//import 'swiper/scss';
-//import 'swiper/scss/navigation';
-//import 'swiper/scss/pagination';
-/*import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';*/
+import { Movie } from '../types/movie';
 
-interface HeroMovie {
-  id: number;
-  title: string;
-  image: string;
-  duration: string;
-  quality: string;
-  genre: string;
-}
 
 interface HeroProps {
-  mainMovies: HeroMovie[];
-  sliderMovies: HeroMovie[];
+  mainMovies: Movie[];
+  sliderMovies: Movie[];
+  trendingMovies: Movie[];
 }
 
-const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies }) => {
+const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies, trendingMovies }) => {
   const movieSliderRef = useRef<Swiper | null>(null);
   const trendingSliderRef = useRef<Swiper | null>(null);
 
@@ -94,7 +82,7 @@ const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies }) => {
               <div key={movie.id} className="col-lg-6">
                 <div className="hero-image">
                   <img src={movie.image} alt={movie.title} />
-                  <a href="#" className="video-btn ripple video-popup">
+                  <a href={`/movie/${movie.slug}`} className="video-btn ripple video-popup">
                     <i className="fa-solid fa-play"></i>
                   </a>
                   <div className="movie-content">
@@ -123,7 +111,7 @@ const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies }) => {
                     <div className="movie-box-items">
                       <div className="movie-image">
                         <img src={movie.image} alt={movie.title} />
-                        <a href="#" className="video-btn ripple video-popup">
+                        <a href={`/movie/${movie.slug}`} className="video-btn ripple video-popup">
                           <i className="fa-solid fa-play"></i>
                         </a>
                         <div className="movie-content">
@@ -137,7 +125,7 @@ const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies }) => {
                               {movie.quality}
                             </li>
                           </ul>
-                          <h3><Link to={`/movie/${movie.id}`}>{movie.title}</Link></h3>
+                          <h3><Link to={`/movie/${movie.slug}`}>{movie.title}</Link></h3>
                           <p>{movie.genre}</p>
                         </div>
                       </div>
@@ -159,19 +147,34 @@ const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies }) => {
       <div className="container">
         <div className="cta-movie-banner-area section-padding">
           <div className="section-title text-center">
-            <h2><img src="/assets/img/lightning.png" alt="lightning" />TRENDING NOW</h2>
+            <h2><div className="fas fa-bolt"></div>TRENDING NOW</h2>
           </div>
-          <div className="cta-movie-banner-items bg-cover" style={{ backgroundImage: "url('/assets/img/cta-movie/movie-bg-3.jpg')" }}>
+          {trendingMovies.map((movieTrending) => (
+          <div className="cta-movie-banner-items bg-cover" style={{ backgroundImage: `url("${movieTrending.largeImage}")` }}>
             <div className="row g-4">
               <div className="col-xl-4">
                 <div className="banner-movie-content">
-                  <a href="#" className="video-btn ripple video-popup">
+
+                  <a href={`/movie/${movieTrending.slug}`} className="video-btn ripple video-popup">
                     <i className="fa-solid fa-play"></i>
                   </a>
-                  <h2>Peaky Blinders</h2>
-                  <p>A gangster family epic set in 1900s England, centering on a gang who sew razor blades in the peaks of their caps.</p>
+                  <div className="star">
+                      {[...Array(5)].map((_, index) => (
+                        <i
+                          key={index}
+                          className={`fas fa-star ${index < Math.floor(Number(movieTrending.rating || 0)) ? '' : 'color-2'}`}
+                        ></i>
+                      ))}
+                    </div>     
+  
+                  <h2>{movieTrending.title}</h2>
+                  <p>{movieTrending.description}</p>
+         
+                  
                 </div>
-              </div>
+                
+              </div> 
+         
               <div className="col-xl-8">
               
                 <div className="trending-movie-right-items" style={{ marginTop: '200px' }}>
@@ -187,7 +190,7 @@ const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies }) => {
                                 <i className="fa-sharp fa-regular fa-tv"></i>
                                 {movie.quality}
                               </span>
-                              <h3><Link to={`/movie/${movie.id}`}>{movie.title}</Link></h3>
+                              <h3><Link to={`/movie/${movie.slug}`}>{movie.title}</Link></h3>
                             </div>
                           </div>
                         </div>
@@ -204,6 +207,7 @@ const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies }) => {
               </div>
             </div>
           </div>
+        ))}
         </div>
       </div>
     </section>

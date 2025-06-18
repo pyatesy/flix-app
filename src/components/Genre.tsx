@@ -58,7 +58,7 @@ const Genre: React.FC = () => {
                       <img src={genre.image} alt={genre.description} />
                       <div className="genre-content"> 
                         <h2>
-                          <Link to={`/genre/${genre.slug}`}>
+                          <Link to={`/genre/${genre.slug}`} className="link-theme">
                             {genre.icon && <i className={`fas ${genre.icon}`}></i>} {genre.name}
                           </Link>
                         </h2>

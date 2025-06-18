@@ -13,8 +13,8 @@ Version: 1.0.0
   --body: #fff;
   --black: #000;
   --white: #eee;
-  --theme: #735CFC;
-  /*--primary:#F00;*/
+  --theme: #00D5F6;
+ /*--primary:#00D5F6;*/
   /*--secondary:#0FF;*/
   --theme2: #735CFC;
   --header: #0D1224;
@@ -25,6 +25,31 @@ Version: 1.0.0
   --bg2: #1A1A1A; /*Used as background of components*/
   --box-shadow: 0px 1px 14px 0px rgba(0, 0, 0, 0.13);
   --font-family: "Barlow Condensed", sans-serif;
+}
+
+.link-theme {
+  color: var(--theme)!important;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: capitalize;
+  text-align: center;
+  border-radius: 30px;
+}
+.btn-primary {
+  background-color: var(--theme)!important;
+  color: var(--white)!important;
+}
+    
+.btn-secondary {
+  border: 1px solid var(--theme)!important;
+  background-color: transparent!important;
+  color: var(--white)!important;
+ 
 }
 
 .theme-btn {

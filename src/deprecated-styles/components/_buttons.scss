@@ -1,0 +1,411 @@
+@use 'sass:color';
+@use 'sass:map';
+@use '../base/variables' as *;
+@use '../base/mixins' as *;
+
+// Button Base
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: spacing(1);
+  padding: spacing(1.5) spacing(2.5);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: $border-radius;
+  transition: $transition-base;
+
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(map.get($colors, 'primary'), 0.25);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  i {
+    font-size: 18px;
+  }
+}
+
+// Button Variants
+.btn-primary {
+  background: map-get($colors, 'primary');
+  color: map-get($colors, 'white');
+
+  &:hover {
+    background: darken(map-get($colors, 'primary'), 10%);
+  }
+}
+
+.btn-secondary {
+  background: map-get($colors, 'secondary');
+  color: map-get($colors, 'white');
+
+  &:hover {
+    background: darken(map-get($colors, 'secondary'), 10%);
+  }
+}
+
+.btn-success {
+  color: map.get($colors, 'white');
+  background-color: map.get($colors, 'success');
+  border-color: map.get($colors, 'success');
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: color.adjust(map.get($colors, 'success'), $lightness: -10%);
+    border-color: color.adjust(map.get($colors, 'success'), $lightness: -10%);
+  }
+}
+
+.btn-danger {
+  color: map.get($colors, 'white');
+  background-color: map.get($colors, 'danger');
+  border-color: map.get($colors, 'danger');
+
+  &:hover {
+    background-color: color.adjust(map.get($colors, 'danger'), $lightness: -10%);
+    border-color: color.adjust(map.get($colors, 'danger'), $lightness: -10%);
+  }
+}
+
+.btn-warning {
+  color: map.get($colors, 'dark');
+  background-color: map.get($colors, 'warning');
+  border-color: map.get($colors, 'warning');
+
+  &:hover {
+    background-color: color.adjust(map.get($colors, 'warning'), $lightness: -10%);
+    border-color: color.adjust(map.get($colors, 'warning'), $lightness: -10%);
+  }
+}
+
+.btn-info {
+  color: map.get($colors, 'white');
+  background-color: map.get($colors, 'info');
+  border-color: map.get($colors, 'info');
+
+  &:hover {
+    background-color: color.adjust(map.get($colors, 'info'), $lightness: -10%);
+    border-color: color.adjust(map.get($colors, 'info'), $lightness: -10%);
+  }
+}
+
+.btn-light {
+  color: map.get($colors, 'dark');
+  background-color: map.get($colors, 'light');
+  border-color: map.get($colors, 'light');
+
+  &:hover {
+    background-color: color.adjust(map.get($colors, 'light'), $lightness: -10%);
+    border-color: color.adjust(map.get($colors, 'light'), $lightness: -10%);
+  }
+}
+
+.btn-dark {
+  color: map.get($colors, 'white');
+  background-color: map.get($colors, 'dark');
+  border-color: map.get($colors, 'dark');
+
+  &:hover {
+    background-color: color.adjust(map.get($colors, 'dark'), $lightness: -10%);
+    border-color: color.adjust(map.get($colors, 'dark'), $lightness: -10%);
+  }
+}
+
+// Outline Buttons
+.btn-outline-primary {
+  color: map.get($colors, 'primary');
+  background-color: transparent;
+  border-color: map.get($colors, 'primary');
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: map.get($colors, 'primary');
+    border-color: map.get($colors, 'primary');
+  }
+}
+
+.btn-outline-secondary {
+  color: map.get($colors, 'secondary');
+  background-color: transparent;
+  border-color: map.get($colors, 'secondary');
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: map.get($colors, 'secondary');
+    border-color: map.get($colors, 'secondary');
+  }
+}
+
+.btn-outline-success {
+  color: map.get($colors, 'success');
+  background-color: transparent;
+  border-color: map.get($colors, 'success');
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: map.get($colors, 'success');
+    border-color: map.get($colors, 'success');
+  }
+}
+
+.btn-outline-danger {
+  color: map.get($colors, 'danger');
+  background-color: transparent;
+  border-color: map.get($colors, 'danger');
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: map.get($colors, 'danger');
+    border-color: map.get($colors, 'danger');
+  }
+}
+
+.btn-outline-warning {
+  color: map.get($colors, 'warning');
+  background-color: transparent;
+  border-color: map.get($colors, 'warning');
+
+  &:hover {
+    color: map.get($colors, 'dark');
+    background-color: map.get($colors, 'warning');
+    border-color: map.get($colors, 'warning');
+  }
+}
+
+.btn-outline-info {
+  color: map.get($colors, 'info');
+  background-color: transparent;
+  border-color: map.get($colors, 'info');
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: map.get($colors, 'info');
+    border-color: map.get($colors, 'info');
+  }
+}
+
+.btn-outline-light {
+  color: map.get($colors, 'light');
+  background-color: transparent;
+  border-color: map.get($colors, 'light');
+
+  &:hover {
+    color: map.get($colors, 'dark');
+    background-color: map.get($colors, 'light');
+    border-color: map.get($colors, 'light');
+  }
+}
+
+.btn-outline-dark {
+  color: map.get($colors, 'dark');
+  background-color: transparent;
+  border-color: map.get($colors, 'dark');
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: map.get($colors, 'dark');
+    border-color: map.get($colors, 'dark');
+  }
+}
+
+// Button Sizes
+.btn-sm {
+  padding: spacing(0.5) spacing(1.5);
+  font-size: 14px;
+  border-radius: $border-radius-sm;
+
+  i {
+    font-size: 16px;
+  }
+}
+
+.btn-lg {
+  padding: spacing(2) spacing(3);
+  font-size: 18px;
+  border-radius: $border-radius-lg;
+
+  i {
+    font-size: 20px;
+  }
+}
+
+// Block Button
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+// Button Group
+.btn-group {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+
+  > .btn {
+    position: relative;
+    flex: 1 1 auto;
+
+    &:not(:first-child) {
+      margin-left: -1px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    &:not(:last-child) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}
+
+// Button with Icon
+.btn-icon {
+  padding: spacing(1);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+
+  &.btn-sm {
+    width: 32px;
+    height: 32px;
+  }
+
+  &.btn-lg {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+// Social Buttons
+.btn-facebook {
+  color: map.get($colors, 'white');
+  background-color: #1877f2;
+  border-color: #1877f2;
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: color.adjust(#1877f2, $lightness: -10%);
+    border-color: color.adjust(#1877f2, $lightness: -10%);
+  }
+}
+
+.btn-twitter {
+  color: map.get($colors, 'white');
+  background-color: #1da1f2;
+  border-color: #1da1f2;
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: color.adjust(#1da1f2, $lightness: -10%);
+    border-color: color.adjust(#1da1f2, $lightness: -10%);
+  }
+}
+
+.btn-instagram {
+  color: map.get($colors, 'white');
+  background-color: #e4405f;
+  border-color: #e4405f;
+
+  &:hover {
+    color: map.get($colors, 'white');
+    background-color: color.adjust(#e4405f, $lightness: -10%);
+    border-color: color.adjust(#e4405f, $lightness: -10%);
+  }
+}
+
+.btn-youtube {
+  background: #ff0000;
+  color: map-get($colors, 'white');
+  &:hover {
+    background: darken(#ff0000, 10%);
+  }
+}
+
+// Loading Button
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    top: calc(50% - 0.5rem);
+    left: calc(50% - 0.5rem);
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: button-loading-spinner 0.75s linear infinite;
+  }
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+// Button with Badge
+.btn-badge {
+  position: relative;
+  padding-right: spacing(4);
+
+  .badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+  }
+}
+
+// Button with Tooltip
+.btn-tooltip {
+  position: relative;
+
+  &::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: spacing(0.5) spacing(1);
+    background: rgba(0, 0, 0, 0.8);
+    color: map.get($colors, 'white');
+    font-size: 14px;
+    border-radius: $border-radius;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: $transition-base;
+  }
+
+  &:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+// Utility: box-shadow using primary color
+.btn:focus,
+.btn.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(map.get($colors, 'primary'), 0.25);
+} 

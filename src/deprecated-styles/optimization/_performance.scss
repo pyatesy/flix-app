@@ -1,0 +1,359 @@
+// Performance Optimizations
+// ==========================================================================
+
+// Critical CSS
+// Only include styles needed for above-the-fold content
+.critical {
+  // Header
+  .header {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+  
+  // Hero Section
+  .hero {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+  
+  // Navigation
+  .nav {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+// Lazy Loading
+.lazy {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  
+  &.loaded {
+    opacity: 1;
+  }
+}
+
+// Image Optimization
+.optimized-image {
+  // Prevent layout shifts
+  aspect-ratio: attr(width) / attr(height);
+  
+  // Lazy loading
+  loading: lazy;
+  
+  // Responsive images
+  srcset: attr(data-srcset);
+  sizes: attr(data-sizes);
+}
+
+// Animation Performance
+.animate {
+  // Use transform instead of top/left
+  transform: translate3d(0, 0, 0);
+  
+  // Hardware acceleration
+  will-change: transform;
+  backface-visibility: hidden;
+  
+  // Reduce repaints
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+// Reduce Paint Operations
+.reduce-paint {
+  // Use opacity instead of visibility
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  
+  &.visible {
+    opacity: 1;
+  }
+  
+  // Use transform for animations
+  &.slide {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    
+    &.active {
+      transform: translateX(0);
+    }
+  }
+}
+
+// Optimize Transitions
+.optimize-transition {
+  // Only animate transform and opacity
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  
+  // Hardware acceleration
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+// Reduce Layout Thrashing
+.reduce-layout {
+  // Batch DOM reads
+  .batch-read {
+    // Use requestAnimationFrame
+    @include batch-animation;
+  }
+  
+  // Batch DOM writes
+  .batch-write {
+    // Use requestAnimationFrame
+    @include batch-animation;
+  }
+}
+
+// Optimize Scrolling
+.optimize-scroll {
+  // Smooth scrolling
+  scroll-behavior: smooth;
+  
+  // Reduce scroll events
+  .scroll-container {
+    // Use IntersectionObserver
+    @include intersection-observer;
+  }
+  
+  // Virtual scrolling
+  .virtual-scroll {
+    // Only render visible items
+    @include virtual-scroll;
+  }
+}
+
+// Reduce Memory Usage
+.reduce-memory {
+  // Clean up event listeners
+  .cleanup {
+    // Remove event listeners
+    @include cleanup-events;
+  }
+  
+  // Limit DOM nodes
+  .limit-nodes {
+    // Remove unused nodes
+    @include limit-nodes;
+  }
+}
+
+// Optimize Font Loading
+.optimize-fonts {
+  // Font display
+  font-display: swap;
+  
+  // Preload critical fonts
+  @include preload-fonts;
+  
+  // Font subsetting
+  @include font-subsetting;
+}
+
+// Optimize Media Queries
+.optimize-media {
+  // Use min-width instead of max-width
+  @include media-breakpoint-up(sm) {
+    // Styles for small devices and up
+  }
+  
+  // Combine media queries
+  @include media-breakpoint-between(sm, md) {
+    // Styles for small to medium devices
+  }
+}
+
+// Optimize Selectors
+.optimize-selectors {
+  // Use classes instead of IDs
+  .class-selector {
+    // Styles
+  }
+  
+  // Avoid deep nesting
+  .shallow-nesting {
+    // Styles
+  }
+  
+  // Use BEM naming
+  .block {
+    &__element {
+      // Styles
+    }
+    
+    &--modifier {
+      // Styles
+    }
+  }
+}
+
+// Optimize CSS Variables
+.optimize-variables {
+  // Use CSS custom properties
+  --optimized-color: var(--color-primary);
+  --optimized-spacing: var(--spacing-4);
+  --optimized-font-size: var(--font-size-base);
+  
+  // Reduce variable usage
+  color: var(--optimized-color);
+  padding: var(--optimized-spacing);
+  font-size: var(--optimized-font-size);
+}
+
+// Optimize Animations
+.optimize-animations {
+  // Use transform instead of top/left
+  transform: translate3d(0, 0, 0);
+  
+  // Hardware acceleration
+  will-change: transform;
+  backface-visibility: hidden;
+  
+  // Reduce repaints
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  
+  // Use requestAnimationFrame
+  @include request-animation-frame;
+}
+
+// Optimize Print Styles
+@media print {
+  .optimize-print {
+    // Remove unnecessary styles
+    background: none !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    
+    // Optimize page breaks
+    page-break-inside: avoid;
+    page-break-after: always;
+    
+    // Remove unnecessary elements
+    .no-print {
+      display: none !important;
+    }
+  }
+}
+
+// Optimize Dark Mode
+@media (prefers-color-scheme: dark) {
+  .optimize-dark-mode {
+    // Use CSS custom properties
+    --optimized-bg: var(--color-dark);
+    --optimized-text: var(--color-light);
+    
+    // Apply dark mode styles
+    background-color: var(--optimized-bg);
+    color: var(--optimized-text);
+  }
+}
+
+// Optimize Reduced Motion
+@media (prefers-reduced-motion: reduce) {
+  .optimize-motion {
+    // Remove animations
+    animation: none !important;
+    transition: none !important;
+    
+    // Use alternative styles
+    @include reduced-motion;
+  }
+}
+
+// Optimize High Contrast
+@media (forced-colors: active) {
+  .optimize-contrast {
+    // Use high contrast colors
+    @include high-contrast;
+  }
+}
+
+// Optimize Touch Devices
+@media (hover: none) {
+  .optimize-touch {
+    // Increase touch targets
+    min-height: 44px;
+    min-width: 44px;
+    
+    // Remove hover effects
+    &:hover {
+      // No hover styles
+    }
+  }
+}
+
+// Optimize Print Styles
+@media print {
+  .optimize-print {
+    // Remove unnecessary styles
+    background: none !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    
+    // Optimize page breaks
+    page-break-inside: avoid;
+    page-break-after: always;
+    
+    // Remove unnecessary elements
+    .no-print {
+      display: none !important;
+    }
+  }
+}
+
+// Optimize Dark Mode
+@media (prefers-color-scheme: dark) {
+  .optimize-dark-mode {
+    // Use CSS custom properties
+    --optimized-bg: var(--color-dark);
+    --optimized-text: var(--color-light);
+    
+    // Apply dark mode styles
+    background-color: var(--optimized-bg);
+    color: var(--optimized-text);
+  }
+}
+
+// Optimize Reduced Motion
+@media (prefers-reduced-motion: reduce) {
+  .optimize-motion {
+    // Remove animations
+    animation: none !important;
+    transition: none !important;
+    
+    // Use alternative styles
+    @include reduced-motion;
+  }
+}
+
+// Optimize High Contrast
+@media (forced-colors: active) {
+  .optimize-contrast {
+    // Use high contrast colors
+    @include high-contrast;
+  }
+}
+
+// Optimize Touch Devices
+@media (hover: none) {
+  .optimize-touch {
+    // Increase touch targets
+    min-height: 44px;
+    min-width: 44px;
+    
+    // Remove hover effects
+    &:hover {
+      // No hover styles
+    }
+  }
+} 

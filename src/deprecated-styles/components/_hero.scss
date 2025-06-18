@@ -1,0 +1,304 @@
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:math';
+@use '../base/variables' as *;
+@use '../base/mixins' as *;
+// Hero Section Styles
+.hero-section {
+  @include theme-colors('secondary', 'white');
+  position: relative;
+  padding: spacing(5) 0;
+  background-size: cover;
+  background-position: center;
+
+  .hero-1 {
+    .container-fluid {
+      .row {
+        margin: 0 -15px;
+      }
+    }
+  }
+
+  .hero-image {
+    position: relative;
+    border-radius: $border-radius;
+    overflow: hidden;
+    margin-bottom: spacing(4);
+
+    img {
+      width: 100%;
+      height: auto;
+      transition: $transition-base;
+    }
+
+    .video-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: map.get($colors, 'primary');
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: map.get($colors, 'white');
+      font-size: 24px;
+      transition: $transition-base;
+
+      &:hover {
+        background: color.adjust(map.get($colors, 'primary'), $lightness: -10%);
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+
+    .movie-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: spacing(3);
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      color: map.get($colors, 'white');
+
+      .post-time {
+        display: flex;
+        gap: spacing(2);
+        margin-bottom: spacing(2);
+        color: map.get($colors, 'body');
+
+        li {
+          display: flex;
+          align-items: center;
+          gap: spacing(1);
+
+          i {
+            color: map.get($colors, 'primary');
+          }
+        }
+      }
+
+      h3 {
+        font-size: 24px;
+        margin-bottom: spacing(1);
+
+        a {
+          color: map.get($colors, 'white');
+          transition: $transition-base;
+
+          &:hover {
+            color: map.get($colors, 'primary');
+          }
+        }
+      }
+
+      p {
+        color: map.get($colors, 'body');
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Movie Slider Styles
+.movie-wrapper {
+  position: relative;
+  margin-top: spacing(4);
+
+  .movie-slider {
+    .swiper-slide {
+      .movie-box-items {
+        .movie-image {
+          position: relative;
+          border-radius: $border-radius;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: auto;
+            transition: $transition-base;
+          }
+
+          .video-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: map.get($colors, 'primary');
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: map.get($colors, 'white');
+            font-size: 18px;
+            transition: $transition-base;
+
+            &:hover {
+              background: color.adjust(map.get($colors, 'primary'), $lightness: -10%);
+              transform: translate(-50%, -50%) scale(1.1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .array-button {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: map.get($z-index, 'header');
+
+    button {
+      width: 40px;
+      height: 40px;
+      background: map.get($colors, 'primary');
+      border: none;
+      border-radius: 50%;
+      color: map.get($colors, 'white');
+      cursor: pointer;
+      pointer-events: auto;
+      transition: $transition-base;
+
+      &:hover {
+        background: color.adjust(map.get($colors, 'primary'), $lightness: -10%);
+      }
+    }
+  }
+
+  .swiper-dot-3 {
+    margin-top: spacing(3);
+
+    .dot2 {
+      .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+        background: map.get($colors, 'body');
+        opacity: 0.5;
+        transition: $transition-base;
+
+        &-active {
+          background: map.get($colors, 'primary');
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+// Trending Section Styles
+.cta-movie-banner-area {
+  .section-title {
+    text-align: center;
+    margin-bottom: spacing(4);
+
+    h2 {
+      color: map.get($colors, 'white');
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: spacing(2);
+
+      img {
+        width: 30px;
+        height: auto;
+      }
+    }
+  }
+
+  .cta-movie-banner-items {
+    position: relative;
+    padding: spacing(5);
+    border-radius: $border-radius;
+    background-size: cover;
+    background-position: center;
+
+    .banner-movie-content {
+      text-align: center;
+      color: map.get($colors, 'white');
+
+      .video-btn {
+        width: 80px;
+        height: 80px;
+        background: map.get($colors, 'primary');
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: map.get($colors, 'white');
+        font-size: 24px;
+        margin: 0 auto spacing(3);
+        transition: $transition-base;
+
+        &:hover {
+          background: color.adjust(map.get($colors, 'primary'), $lightness: -10%);
+          transform: scale(1.1);
+        }
+      }
+
+      h2 {
+        font-size: 36px;
+        margin-bottom: spacing(2);
+      }
+
+      p {
+        color: map.get($colors, 'body');
+        max-width: 600px;
+        margin: 0 auto;
+      }
+    }
+  }
+}
+
+// Responsive Styles
+@include media-breakpoint-up('sm') {
+  .hero-section {
+    .hero-image {
+      .movie-content {
+        h3 {
+          font-size: 28px;
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up('md') {
+  .hero-section {
+    .hero-image {
+      .movie-content {
+        h3 {
+          font-size: 32px;
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up('lg') {
+  .hero-section {
+    .hero-image {
+      .movie-content {
+        h3 {
+          font-size: 36px;
+        }
+      }
+    }
+  }
+}
+
+.hero {
+  background: map-get($colors, 'primary');
+  color: map-get($colors, 'white');
+  &:hover {
+    background: darken(map-get($colors, 'primary'), 10%);
+  }
+} 

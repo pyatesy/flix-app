@@ -1,0 +1,177 @@
+.header-main .main-menu ul li .submenu li a {
+  position: relative;
+z-index: 11;
+font-size: 1.5em;
+font-weight: 500;
+color: var(--white);
+padding: 0 25px;
+padding-bottom: 11px;
+padding-top: 11px;
+text-transform: uppercase;
+text-decoration: none;
+width: 100%;
+border-bottom: 1px solid #272525;
+}
+
+.side-panel {
+    position: fixed;
+    top: 0;
+    right: -500px;
+    width: 500px;
+    height: 100vh;
+    background-color: #1a1a1a;
+    z-index: 1000;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .side-panel.open {
+    right: 0;
+  }
+  
+  .side-panel-content {
+    padding: 2rem;
+    height: 100%;
+    overflow-y: auto;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+  
+  .close-button:hover {
+    color: var(--color-primary);
+  }
+
+  .side-panel-content code{
+    font-size: 0.8em;
+  }
+  
+  @media (max-width: 768px) {
+    .side-panel {
+      width: 100%;
+      right: -100%;
+    }
+  } 
+  
+
+  .App {
+    text-align: center;
+  }
+  
+  .App-logo {
+    height: 40vmin;
+    pointer-events: none;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
+  }
+  
+  .App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  
+  .App-link {
+    color: #61dafb;
+  }
+  
+  @keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .cursor-outer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+  }
+  
+  .cursor-inner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background-color: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+  }
+  
+  /* Hide cursor on touch devices */
+  @media (hover: none) {
+    .cursor-outer,
+    .cursor-inner {
+      display: none;
+    }
+  } 
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 2rem;
+  }
+  
+  .comparison-table th,
+  .comparison-table td {
+    padding: 1rem;
+    border: 1px solid #ddd;
+  }
+  
+  .comparison-table th {
+    background-color: #f8f9fa;
+  }
+  
+  .comparison-table th h3 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .comparison-table .price {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .comparison-table .fa-check {
+    color: var(--fa-check);
+  }
+  
+  .comparison-table .fa-times {
+    color: var(--fa-times);
+  }
+  
+  .comparison-table tfoot td {
+    border-top: 2px solid #ddd;
+  }

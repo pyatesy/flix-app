@@ -1,0 +1,813 @@
+// Modern CSS Reset
+
+// Box sizing rules
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// Remove default margin and padding
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+// Set core root defaults
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+// Set core body defaults
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Remove list styles on ul, ol elements
+ul,
+ol {
+  list-style: none;
+}
+
+// Make images easier to work with
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+// Inherit fonts for inputs and buttons
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+// Remove all animations, transitions and smooth scroll for people that prefer not to see them
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// Remove default button styles
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+// Remove default link styles
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+// Remove default table styles
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// Remove default fieldset styles
+fieldset {
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+// Remove default legend styles
+legend {
+  padding: 0;
+}
+
+// Remove default textarea styles
+textarea {
+  resize: vertical;
+}
+
+// Remove default select styles
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+// Remove default input number styles
+input[type="number"] {
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+// Remove default search input styles
+input[type="search"] {
+  -webkit-appearance: none;
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+}
+
+// Remove default color input styles
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  &::-webkit-color-swatch {
+    border: none;
+  }
+}
+
+// Remove default file input styles
+input[type="file"] {
+  &::-webkit-file-upload-button {
+    -webkit-appearance: none;
+  }
+}
+
+// Remove default progress bar styles
+progress {
+  -webkit-appearance: none;
+  &::-webkit-progress-bar {
+    background: none;
+  }
+  &::-webkit-progress-value {
+    background: none;
+  }
+  &::-moz-progress-bar {
+    background: none;
+  }
+}
+
+// Remove default meter styles
+meter {
+  -webkit-appearance: none;
+  &::-webkit-meter-bar {
+    background: none;
+  }
+  &::-webkit-meter-optimum-value {
+    background: none;
+  }
+  &::-webkit-meter-suboptimum-value {
+    background: none;
+  }
+  &::-webkit-meter-even-less-good-value {
+    background: none;
+  }
+  &::-moz-meter-bar {
+    background: none;
+  }
+}
+
+// Remove default details styles
+details {
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+// Remove default summary styles
+summary {
+  list-style: none;
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+// Remove default dialog styles
+dialog {
+  padding: 0;
+  border: none;
+  &::backdrop {
+    background: none;
+  }
+}
+
+// Remove default mark styles
+mark {
+  background: none;
+  color: inherit;
+}
+
+// Remove default ruby styles
+ruby {
+  &::before,
+  &::after {
+    content: none;
+  }
+}
+
+// Remove default bdi styles
+bdi {
+  unicode-bidi: isolate;
+}
+
+// Remove default output styles
+output {
+  display: inline;
+}
+
+// Remove default canvas styles
+canvas {
+  display: inline-block;
+}
+
+// Remove default iframe styles
+iframe {
+  border: none;
+}
+
+// Remove default embed styles
+embed {
+  display: block;
+}
+
+// Remove default object styles
+object {
+  display: block;
+}
+
+// Remove default param styles
+param {
+  display: none;
+}
+
+// Remove default video styles
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// Remove default audio styles
+audio {
+  display: block;
+  max-width: 100%;
+}
+
+// Remove default source styles
+source {
+  display: none;
+}
+
+// Remove default track styles
+track {
+  display: none;
+}
+
+// Remove default map styles
+map {
+  display: inline;
+}
+
+// Remove default area styles
+area {
+  display: none;
+}
+
+// Remove default script styles
+script {
+  display: none;
+}
+
+// Remove default style styles
+style {
+  display: none;
+}
+
+// Remove default link styles
+link {
+  display: none;
+}
+
+// Remove default meta styles
+meta {
+  display: none;
+}
+
+// Remove default title styles
+title {
+  display: none;
+}
+
+// Remove default base styles
+base {
+  display: none;
+}
+
+// Remove default head styles
+head {
+  display: none;
+}
+
+// Remove default html styles
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+// Remove default body styles
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #000;
+  background-color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Remove default heading styles
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+// Remove default paragraph styles
+p {
+  margin: 0;
+}
+
+// Remove default list styles
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+// Remove default table styles
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// Remove default form styles
+form {
+  margin: 0;
+}
+
+// Remove default fieldset styles
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+// Remove default legend styles
+legend {
+  padding: 0;
+}
+
+// Remove default button styles
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+// Remove default input styles
+input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+// Remove default textarea styles
+textarea {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  resize: vertical;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+// Remove default select styles
+select {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+// Remove default optgroup styles
+optgroup {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default option styles
+option {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default label styles
+label {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default output styles
+output {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default progress styles
+progress {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+// Remove default meter styles
+meter {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+// Remove default details styles
+details {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default summary styles
+summary {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+// Remove default dialog styles
+dialog {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default mark styles
+mark {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default ruby styles
+ruby {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default rt styles
+rt {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default rp styles
+rp {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default bdi styles
+bdi {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default output styles
+output {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default canvas styles
+canvas {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default iframe styles
+iframe {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default embed styles
+embed {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default object styles
+object {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default param styles
+param {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default video styles
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default audio styles
+audio {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default source styles
+source {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default track styles
+track {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default map styles
+map {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default area styles
+area {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default script styles
+script {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default style styles
+style {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default link styles
+link {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default meta styles
+meta {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default title styles
+title {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default base styles
+base {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default head styles
+head {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default html styles
+html {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+// Remove default body styles
+body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+} 

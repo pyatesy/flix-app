@@ -1,0 +1,125 @@
+@use 'sass:map';
+@use 'sass:color';
+@use 'sass:math';
+
+// Colors
+$primary: #e50914;
+$secondary: #221f1f;
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #dc3545;
+$light: #f8f9fa;
+$dark: #212529;
+$body-color: #999999; 
+
+// Grid breakpoints
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+// Typography
+$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-size-base: 1rem;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$line-height-base: 1.5;
+
+// Spacing
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4,
+  7: $spacer * 5,
+  8: $spacer * 6
+);
+
+// Breakpoints
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+// Border
+$border-radius: 0.25rem;
+$border-radius-lg: 0.5rem;
+$border-radius-sm: 0.2rem;
+$border-radius-xl: 1rem;
+$border-radius-2xl: 2rem;
+$border-radius-pill: 50rem;
+
+// Shadows
+$box-shadow: 0 0.5rem 1rem rgba($dark, 0.15);
+$box-shadow-sm: 0 0.125rem 0.25rem rgba($dark, 0.075);
+$box-shadow-lg: 0 1rem 3rem rgba($dark, 0.175);
+
+// Transitions
+$transition-base: all 0.2s ease-in-out;
+$transition-fade: opacity 0.15s linear;
+$transition-collapse: height 0.35s ease;
+
+// Z-index
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// Grid
+$grid-columns: 12;
+$grid-gutter-width: 30px;
+
+// Functions
+@function color($color, $variant: 'base') {
+  @return map-get(map-get($colors, $color), $variant);
+}
+
+@function spacing($size) {
+  @return map.get($spacers, $size);
+}
+
+@function breakpoint($name) {
+  @return map.get($breakpoints, $name);
+}
+
+// Mixins
+@mixin theme-colors($bg: 'secondary', $text: 'white') {
+  background-color: map.get($colors, $bg);
+  color: map.get($colors, $text);
+}
+
+// Colors map for easy access
+$colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'success': $success,
+  'info': $info,
+  'warning': $warning,
+  'danger': $danger,
+  'light': $light,
+  'dark': $dark,
+  'white': #fff,
+  'body': $body-color,
+  'border': #1F1F1F,
+  'overlay': rgba(0, 0, 0, 0.7)
+);
+
+$z-index: (
+  'header': 1000
+); 

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCSS Test Suite</title>
+  <link rel="stylesheet" href="../main.scss">
+  <link rel="stylesheet" href="test.scss">
+</head>
+<body>
+  <div class="test-container">
+    <h1 class="test-container-title">SCSS Test Suite</h1>
+    
+    <!-- Grid Test -->
+    <section class="test-grid">
+      <h2>Grid System</h2>
+      <div class="row">
+        <div class="col-12">col-12</div>
+      </div>
+      <div class="row">
+        <div class="col-6">col-6</div>
+        <div class="col-6">col-6</div>
+      </div>
+      <div class="row">
+        <div class="col-4">col-4</div>
+        <div class="col-4">col-4</div>
+        <div class="col-4">col-4</div>
+      </div>
+    </section>
+    
+    <!-- Components Test -->
+    <section class="test-components">
+      <h2>Components</h2>
+      
+      <!-- Buttons -->
+      <div class="btn-group">
+        <button class="btn btn-primary">Primary</button>
+        <button class="btn btn-secondary">Secondary</button>
+        <button class="btn btn-success">Success</button>
+        <button class="btn btn-danger">Danger</button>
+        <button class="btn btn-warning">Warning</button>
+        <button class="btn btn-info">Info</button>
+      </div>
+      
+      <!-- Cards -->
+      <div class="card">
+        <div class="card-header">Card Header</div>
+        <div class="card-body">
+          <h5 class="card-title">Card Title</h5>
+          <p class="card-text">Card content goes here.</p>
+        </div>
+        <div class="card-footer">Card Footer</div>
+      </div>
+      
+      <!-- Alerts -->
+      <div class="alert alert-primary">Primary Alert</div>
+      <div class="alert alert-secondary">Secondary Alert</div>
+      <div class="alert alert-success">Success Alert</div>
+      <div class="alert alert-danger">Danger Alert</div>
+      <div class="alert alert-warning">Warning Alert</div>
+      <div class="alert alert-info">Info Alert</div>
+      
+      <!-- Badges -->
+      <div class="badge-group">
+        <span class="badge badge-primary">Primary</span>
+        <span class="badge badge-secondary">Secondary</span>
+        <span class="badge badge-success">Success</span>
+        <span class="badge badge-danger">Danger</span>
+        <span class="badge badge-warning">Warning</span>
+        <span class="badge badge-info">Info</span>
+      </div>
+      
+      <!-- Forms -->
+      <div class="form-group">
+        <label for="testInput">Test Input</label>
+        <input type="text" class="form-control" id="testInput">
+      </div>
+      
+      <!-- Navigation -->
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Active</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+      </ul>
+      
+      <!-- Pagination -->
+      <nav>
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item active"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+      </nav>
+      
+      <!-- Progress -->
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 75%"></div>
+      </div>
+    </section>
+    
+    <!-- Utilities Test -->
+    <section class="test-utilities">
+      <h2>Utilities</h2>
+      
+      <!-- Spacing -->
+      <div class="spacing-test">Spacing Test</div>
+      
+      <!-- Colors -->
+      <div class="color-test color-test-primary">Primary</div>
+      <div class="color-test color-test-secondary">Secondary</div>
+      <div class="color-test color-test-success">Success</div>
+      <div class="color-test color-test-danger">Danger</div>
+      <div class="color-test color-test-warning">Warning</div>
+      <div class="color-test color-test-info">Info</div>
+      
+      <!-- Typography -->
+      <div class="typography-test">
+        <h1>Heading 1</h1>
+        <h2>Heading 2</h2>
+        <h3>Heading 3</h3>
+        <h4>Heading 4</h4>
+        <h5>Heading 5</h5>
+        <h6>Heading 6</h6>
+        <p>Paragraph text</p>
+      </div>
+      
+      <!-- Flexbox -->
+      <div class="flex-test">
+        <div>Flex Item 1</div>
+        <div>Flex Item 2</div>
+        <div>Flex Item 3</div>
+      </div>
+      
+      <!-- Shadows -->
+      <div class="shadow-test shadow-test-sm">Small Shadow</div>
+      <div class="shadow-test shadow-test-md">Medium Shadow</div>
+      <div class="shadow-test shadow-test-lg">Large Shadow</div>
+    </section>
+    
+    <!-- Responsive Test -->
+    <section class="test-responsive">
+      <h2>Responsive</h2>
+      <div class="responsive-test">Responsive Test</div>
+    </section>
+    
+    <!-- Animations Test -->
+    <section class="test-animations">
+      <h2>Animations</h2>
+      <div class="animation-test animation-test-spin"></div>
+      <div class="animation-test animation-test-pulse"></div>
+    </section>
+    
+    <!-- Icons Test -->
+    <section class="test-icons">
+      <h2>Icons</h2>
+      <div class="icon-test">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-heart"></i>
+        <i class="fas fa-user"></i>
+      </div>
+    </section>
+    
+    <!-- Print Test -->
+    <section class="test-print">
+      <h2>Print</h2>
+      <div class="print-test">Print Test</div>
+    </section>
+    
+    <!-- Accessibility Test -->
+    <section class="test-accessibility">
+      <h2>Accessibility</h2>
+      <div class="sr-only">Screen Reader Only</div>
+      <button class="focus-visible">Focus Visible Test</button>
+    </section>
+    
+    <!-- Performance Test -->
+    <section class="test-performance">
+      <h2>Performance</h2>
+      <div class="performance-test">Performance Test</div>
+    </section>
+    
+    <!-- Variables Test -->
+    <section class="test-variables">
+      <h2>Variables</h2>
+      <div class="variable-test">Variable Test</div>
+    </section>
+    
+    <!-- Mixins Test -->
+    <section class="test-mixins">
+      <h2>Mixins</h2>
+      <div class="mixin-test">Mixin Test</div>
+    </section>
+    
+    <!-- Functions Test -->
+    <section class="test-functions">
+      <h2>Functions</h2>
+      <div class="function-test function-test-spacing">Spacing Function Test</div>
+      <div class="function-test function-test-color">Color Function Test</div>
+      <div class="function-test function-test-font-size">Font Size Function Test</div>
+    </section>
+  </div>
+</body>
+</html> 

@@ -16,6 +16,7 @@ import RegionOverlay from './components/RegionOverlay';
 import ThemeProvider from './components/ThemeProvider';
 import OfferBanner from './components/OfferBanner';
 import TVScreenWrapper from './components/TVScreenWrapper';
+import MobileScreenWrapper from './components/MobileScreenWrapper';
 
 const AppContent: React.FC = () => {
   const { userId } = useUserId();
@@ -23,6 +24,7 @@ const AppContent: React.FC = () => {
   const [isOptimizelyReady, setIsOptimizelyReady] = useState(false);
   const device = localStorage.getItem('device') || 'browser';
   const isTVMode = device === 'tv';
+  const isMobileMode = device === 'mobile';
 
   useEffect(() => {
     // Add cursor elements to the DOM
@@ -88,7 +90,9 @@ const AppContent: React.FC = () => {
 
   return (
     <TVScreenWrapper isTVMode={isTVMode}>
-      {appContent}
+      <MobileScreenWrapper isMobileMode={isMobileMode}>
+        {appContent}
+      </MobileScreenWrapper>
     </TVScreenWrapper>
   );
 };

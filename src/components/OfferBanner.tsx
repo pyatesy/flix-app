@@ -40,13 +40,14 @@ const OfferBanner: React.FC = () => {
         background: ${config.background};
         color: white;
         padding: 15px 20px;
-        margin: 10px 0;
+        margin: 20px 0px;
         border-radius: 8px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        text-align: center;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        z-index: 1000;
+        z-index: 999;
         position: relative;
       `;
 

@@ -4605,6 +4605,12 @@ span {
   color: var(--white);
 }
 
+.pricing-box-items.highlight {
+  background-color: var(--theme2);
+  color: var(--white);
+  border: 1px solid var(--theme);
+}
+
 .pricing-box-items {
   margin-top: 30px;
   background-color: var(--bg2);

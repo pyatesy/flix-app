@@ -90,7 +90,7 @@ const Pricing: React.FC = () => {
             <div id="monthly" className="tab-pane fade show active" role="tabpanel">
               <div className="row">
                 {optimizelyPricingData.plans.map((plan, index) => (
-                  <div key={plan.name} className="pricing-box-items wow fadeInUp" data-wow-delay={`.${3 + index * 2}s`}>
+                  <div key={plan.name} className={`pricing-box-items wow fadeInUp ${'highlight' in plan && plan.highlight ? 'highlight' : ''}`} data-wow-delay={`.${3 + index * 2}s`}>
                     <h3>{plan.name}</h3>
                     <p>{plan.description}</p>
                     <h2>${(plan.monthlyPrice * pricingMultiplier).toFixed(2)} <sub>/month</sub></h2>
@@ -134,7 +134,7 @@ const Pricing: React.FC = () => {
                 <tr>
                   <th className="text-dark">Features</th>
                   {optimizelyPricingData.plans.map(plan => (
-                    <th key={plan.name} className="text-center text-dark">
+                    <th key={plan.name} className={`text-center text-dark`}>
                       <h3 className="text-dark mb-2">{plan.name}</h3>
                       <div className="price">
                         <span className="monthly-price text-dark">${(plan.monthlyPrice * pricingMultiplier).toFixed(2)}/mo</span>

@@ -14,6 +14,7 @@ import NotFound from './pages/NotFound';
 import LoadingOverlay from './components/LoadingOverlay';
 import RegionOverlay from './components/RegionOverlay';
 import ThemeProvider from './components/ThemeProvider';
+import OfferBanner from './components/OfferBanner';
 
 const AppContent: React.FC = () => {
   const { userId } = useUserId();
@@ -61,6 +62,7 @@ const AppContent: React.FC = () => {
     <Router>
       <div className="body-bg">
         <Header />
+        <OfferBanner />
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -83,6 +85,28 @@ const AppContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  // Parse custom attributes from localStorage
+  const parseCustomAttributes = () => {
+    const customAttributesStr = localStorage.getItem('custom_attributes') || '';
+    const attributes: Record<string, string> = {};
+    
+    if (customAttributesStr.trim()) {
+      customAttributesStr.split('\n').forEach(line => {
+        const trimmedLine = line.trim();
+        if (trimmedLine && trimmedLine.includes('=')) {
+          const [key, value] = trimmedLine.split('=').map(part => part.trim());
+          if (key && value) {
+            attributes[key] = value;
+          }
+        }
+      });
+    }
+    
+    return attributes;
+  };
+
+  const customAttributes = parseCustomAttributes();
+
   return (
     <UserProvider>
       <OptimizelyProvider
@@ -94,6 +118,7 @@ const App: React.FC = () => {
             browser: localStorage.getItem('browser') || '',
             os: localStorage.getItem('os') || '',
             location: localStorage.getItem('user_country') || '',
+            ...customAttributes, // Spread custom attributes
           }
         }}
       >

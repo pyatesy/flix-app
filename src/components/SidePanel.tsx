@@ -14,10 +14,13 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   const [subscriptionDecision] = useDecision('subscription_tiers');
   const [notAvailableDecision] = useDecision('not_available');
   const [themeCustomizationDecision] = useDecision('theme_customization');
+  const [offerBannerDecision] = useDecision('offer_banner');
   const sdkKey = localStorage.getItem('optimizely_sdk_key') || 'VcBzHwxVF7kba7WCvzSfW';
   const [country, setCountry] = useState(localStorage.getItem('user_country') || '');
   const [device, setDevice] = useState(localStorage.getItem('device') || 'browser');
   const [tempCountry, setTempCountry] = useState(country);
+  const [customAttributes, setCustomAttributes] = useState(localStorage.getItem('custom_attributes') || '');
+  const [tempCustomAttributes, setTempCustomAttributes] = useState(customAttributes);
 
   useEffect(() => {
     // Update Optimizely attributes when country or device changes
@@ -32,6 +35,20 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
       // Reload to apply new attributes
       window.location.reload();
     }
+  };
+
+  const handleCustomAttributesSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (tempCustomAttributes !== customAttributes) {
+      setCustomAttributes(tempCustomAttributes);
+      localStorage.setItem('custom_attributes', tempCustomAttributes);
+      // Reload to apply new attributes
+      window.location.reload();
+    }
+  };
+
+  const handleCustomAttributesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTempCustomAttributes(e.target.value);
   };
 
   const handleCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,6 +185,49 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
 
+          <div className="mb-4">
+            <h4 className="text-white mb-3">Custom Attributes</h4>
+            <form onSubmit={handleCustomAttributesSubmit}>
+              <textarea
+                value={tempCustomAttributes}
+                onChange={handleCustomAttributesChange}
+                placeholder="Enter key=value pairs, one per line:&#10;age=25&#10;subscription=premium&#10;language=en"
+                className="form-control bg-dark text-light border-secondary"
+                rows={6}
+                style={{ fontFamily: 'Courier New', fontSize: '16px' }}
+              />
+              <div className="mt-2">
+                <small className="text-light">Format: key=value (one per line)</small>
+              </div>
+              <button
+                type="submit"
+                className="btn btn-secondary mt-2"
+              >
+                <i className="fas fa-check"></i> Apply Attributes
+              </button>
+            </form>
+            
+            {customAttributes && (
+              <div className="mt-3">
+                <h5 className="text-white mb-2">Current Custom Attributes:</h5>
+                <div className="bg-dark border border-secondary p-2 rounded">
+                  {customAttributes.split('\n').map((line, index) => {
+                    const trimmedLine = line.trim();
+                    if (trimmedLine && trimmedLine.includes('=')) {
+                      const [key, value] = trimmedLine.split('=').map(part => part.trim());
+                      return (
+                        <div key={index} className="text-light">
+                          <code>{key}</code>: <code>{value}</code>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
           <h3 className="text-white mb-3"><i className="fas fa-fingerprint"/> Your User ID</h3>
           <div className="">
             <code className="text-light bg-dark border border-secondary p-2 rounded large-text">{userId}</code>
@@ -191,9 +251,10 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
             <h4 className="text-white mb-3"><i className="fas fa-toggle-on"/> Active Feature Flags</h4>
             {renderFeatureFlagInfo(dragonDecision, 'dragon-recommendation-2')}
             {renderFeatureFlagInfo(notAvailableDecision, 'not_available')}
+            {renderFeatureFlagInfo(offerBannerDecision, 'offer_banner')}
             {renderFeatureFlagInfo(subscriptionDecision, 'subscription_tiers')}
             {renderFeatureFlagInfo(themeCustomizationDecision, 'theme_customization')}
-            
+           
           </div>
         </div>
       </div>

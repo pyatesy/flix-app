@@ -15,10 +15,20 @@ interface BannerConfig {
 
 const OfferBanner: React.FC = () => {
   const [decision] = useDecision('offer_banner');
-  const [isInserted, setIsInserted] = useState(false);
+  const [isInserted, setIsInserted] = useState(() => {
+    // Check if banner was already inserted in this session
+    return localStorage.getItem('offer_banner_inserted') === 'true';
+  });
 
   useEffect(() => {
-    if (!decision?.enabled || !decision?.variables?.banner_config || isInserted) {
+    if (!decision?.enabled || !decision?.variables?.banner_config) {
+      return;
+    }
+
+    // Check if banner already exists in DOM
+    const existingBanner = document.querySelector('.offer-banner');
+    if (existingBanner) {
+      setIsInserted(true);
       return;
     }
 
@@ -109,6 +119,7 @@ const OfferBanner: React.FC = () => {
       }
 
       setIsInserted(true);
+      localStorage.setItem('offer_banner_inserted', 'true');
       console.log('Offer banner inserted successfully');
 
     } catch (error) {
@@ -116,13 +127,11 @@ const OfferBanner: React.FC = () => {
     }
   }, [decision, isInserted]);
 
-  // Cleanup on unmount
+  // Cleanup on unmount - only remove if navigating away from the app entirely
   useEffect(() => {
     return () => {
-      const banner = document.querySelector('.offer-banner');
-      if (banner) {
-        banner.remove();
-      }
+      // Don't remove the banner on component unmount to persist across navigation
+      // Only remove when the app is completely closed or refreshed
     };
   }, []);
 

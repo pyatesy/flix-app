@@ -1767,3 +1767,153 @@ code {
     padding: 0 20px;
   }
 }
+
+/* TV Screen Effect Styles */
+.tv-screen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.tv-frame {
+  position: relative;
+  width: 90vw;
+  height: 85vh;
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border-radius: 20px;
+  box-shadow: 
+    0 0 0 8px #333,
+    0 0 0 12px #222,
+    0 20px 40px rgba(0, 0, 0, 0.8),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tv-screen {
+  width: calc(100% - 40px);
+  height: calc(100% - 60px);
+  margin: 20px;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.tv-content {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  position: relative;
+}
+
+.tv-stand {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 40px;
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border-radius: 0 0 60px 60px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* TV Screen Content Adjustments */
+.tv-screen-container .body-bg {
+  background-color: var(--bg);
+  height: 100%;
+  overflow: auto;
+}
+
+.tv-screen-container .header-1 {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tv-screen-container main {
+  padding-top: 20px;
+}
+
+/* Ensure sidebar works in TV mode */
+.tv-screen-container .side-panel {
+  z-index: 1001;
+  right: -500px;
+}
+
+.tv-screen-container .mean__menu-wrapper, .tv-screen-container .tp-header-search, .tv-screen-container .header-button
+{
+  display: none!important;
+}
+
+.tv-screen-container .side-panel.open {
+  right: 0;
+}
+
+/* Ensure header elements are visible in TV mode */
+.tv-screen-container .header-main {
+  position: relative;
+  z-index: 1000;
+}
+
+.tv-screen-container .header-left,
+.tv-screen-container .header-right {
+  position: relative;
+  z-index: 1000;
+}
+
+.tv-screen-container .sidebar__toggle {
+  position: relative;
+  z-index: 1000;
+}
+
+/* Ensure offer banner works in TV mode */
+.tv-screen-container .offer-banner {
+  position: relative;
+  z-index: 999;
+}
+
+/* Ensure region overlay works in TV mode */
+.tv-screen-container .region-overlay {
+  position: fixed;
+  z-index: 1002;
+}
+
+/* Responsive adjustments for TV mode */
+@media (max-width: 1200px) {
+  .tv-frame {
+    width: 95vw;
+    height: 90vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .tv-frame {
+    width: 98vw;
+    height: 95vh;
+    border-radius: 15px;
+  }
+  
+  .tv-screen {
+    margin: 15px;
+  }
+  
+  .tv-stand {
+    width: 100px;
+    height: 30px;
+    bottom: -30px;
+  }
+}

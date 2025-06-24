@@ -15,11 +15,14 @@ import LoadingOverlay from './components/LoadingOverlay';
 import RegionOverlay from './components/RegionOverlay';
 import ThemeProvider from './components/ThemeProvider';
 import OfferBanner from './components/OfferBanner';
+import TVScreenWrapper from './components/TVScreenWrapper';
 
 const AppContent: React.FC = () => {
   const { userId } = useUserId();
   const [isLoading, setIsLoading] = useState(true);
   const [isOptimizelyReady, setIsOptimizelyReady] = useState(false);
+  const device = localStorage.getItem('device') || 'browser';
+  const isTVMode = device === 'tv';
 
   useEffect(() => {
     // Add cursor elements to the DOM
@@ -58,7 +61,7 @@ const AppContent: React.FC = () => {
     return <LoadingOverlay />;
   }
 
-  return (
+  const appContent = (
     <Router>
       <div className="body-bg">
         <Header />
@@ -81,6 +84,12 @@ const AppContent: React.FC = () => {
         <RegionOverlay />
       </div>
     </Router>
+  );
+
+  return (
+    <TVScreenWrapper isTVMode={isTVMode}>
+      {appContent}
+    </TVScreenWrapper>
   );
 };
 

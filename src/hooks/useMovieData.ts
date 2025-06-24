@@ -16,8 +16,7 @@ export const useMovieData = () => {
   // If feature flag is enabled and has movieData variable
   if (decision?.enabled && decision?.variables?.movieData) {
     try {
-      const movieDataString = decision.variables.movieData as string;
-      const optimizelyMovieData: MovieData = JSON.parse(movieDataString);
+      const optimizelyMovieData = decision.variables.movieData as any;
    
       // Validate the parsed config has required properties
       if (optimizelyMovieData.movies && optimizelyMovieData.genres && optimizelyMovieData.actors) {

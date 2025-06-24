@@ -6071,6 +6071,7 @@ span {
 
 .movie-details-wrapper .movie-details-image {
   position: relative;
+  margin-top: 50px;
   margin-bottom: 80px;
 }
 .movie-details-wrapper .movie-details-image img {

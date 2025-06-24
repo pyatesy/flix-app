@@ -33,10 +33,10 @@ trendingMovies={movieDatabase
       <section className="upcoming-movie-section fix section-padding">
         <div className="container-fluid">
           {decision.variationKey === 'dreamfyre' && (
-            <MovieSlider movies={movieDatabase.filter(movie => movie.genres.includes(3) || movie.genres.includes(2)).sort((a, b) => a.title.localeCompare(b.title))} genres={genres} title="Dreamfyre's Recommendations" sliderId='dreamfyre-recommendations'/>
+            <MovieSlider movies={movieDatabase.filter(movie => movie.genres.includes(18) || movie.genres.includes(18)).sort((a, b) => a.title.localeCompare(b.title))} genres={genres} title="Dreamfyre's Recommendations" sliderId='dreamfyre-recommendations'/>
           )}
           {decision.variationKey === 'vermax' && (
-            <MovieSlider movies={movieDatabase.filter(movie => movie.genres.includes(1) || movie.genres.includes(2)).sort((b, a) => a.title.localeCompare(b.title))} genres={genres} title="Vermax's Picks" sliderId='vermax-picks'/>
+            <MovieSlider movies={movieDatabase.filter(movie => movie.genres.includes(18) || movie.genres.includes(18)).sort((b, a) => a.title.localeCompare(b.title))} genres={genres} title="Vermax's Picks" sliderId='vermax-picks'/>
           )}
           {decision.variationKey === 'on' && (
             <MovieSlider movies={movieDatabase.sort((a, b) => (b.recentlyViewed?.getTime() || 0) - (a.recentlyViewed?.getTime() || 0)) } genres={genres} title="Recommended Movies" sliderId='recommended-movies'/>
@@ -64,7 +64,7 @@ trendingMovies={movieDatabase
           <MovieSlider 
             movies={movieDatabase
               .filter(movie => movie.recentlyViewed !== null)
-              .sort((a, b) => (b.recentlyViewed?.getTime() || 0) - (a.recentlyViewed?.getTime() || 0))} 
+              .sort((a: any, b: any) => (b.recentlyViewed?.getTime() || 0) - (a.recentlyViewed?.getTime() || 0))} 
             genres={genres}
             title="Recently viewed" 
             sliderId='recently-viewed'
@@ -74,8 +74,8 @@ trendingMovies={movieDatabase
 
       {/* Unique Genres Section */}
       {genres
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map(genre => (
+        .sort((a: any, b: any) => a.name.localeCompare(b.name))
+        .map((genre: any) => (
         <section key={genre.id} className={`${genre.slug}-videos fix section-padding pt-0`}>
           <div className="container-fluid">
             <MovieSlider 

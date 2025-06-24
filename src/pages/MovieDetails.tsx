@@ -31,7 +31,7 @@ const MovieDetails: React.FC = () => {
       setMovie(foundMovie);
       // Get genre details for the movie
       const movieGenreDetails = foundMovie.genres
-        .map((genreId: number) => genres.find(g => g.id === genreId))
+        .map((genreId: number) => genres.find((g: any) => g.id === genreId))
         .filter((genre: Genre | undefined): genre is Genre => genre !== undefined);
       setMovieGenres(movieGenreDetails);
     }
@@ -110,7 +110,7 @@ const MovieDetails: React.FC = () => {
                       className="cast-slider"
                     >
                       {movie.cast.map((actorId) => {
-                        const actor = actors.find(a => a.id === actorId);
+                        const actor = actors.find((a: any) => a.id === actorId);
                         return actor ? (
                           <SwiperSlide key={actor.id}>
                             <div className="cast-image">

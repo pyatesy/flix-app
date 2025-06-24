@@ -30,7 +30,7 @@ code {
 /* Custom styles */
 .body-bg {
   background-color: var(--bg);
-  color: #ffffff;
+  color: var(--white);
 }
 
 .section-padding {
@@ -211,6 +211,7 @@ code {
 .swiper-wrapper {
   width: 80%;
 }
+
 
 .trending-slider {
   overflow: hidden;
@@ -551,6 +552,7 @@ code {
   position: relative;
   overflow: hidden;
   border-radius: 20px;
+  /*max-height: 900px;*/
 }
 
 .hero-image img {

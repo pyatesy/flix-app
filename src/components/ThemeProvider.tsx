@@ -26,6 +26,23 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.style.setProperty('--logo-url', `url(${themeConfig.assets.logoUrl})`);
     root.style.setProperty('--breadcrumb-bg-url', `url(${themeConfig.assets.breadcrumbBackgroundUrl})`);
 
+    if('title' in themeConfig.assets){
+      document.title = `${themeConfig.assets.title}`;
+    }else{
+      document.title = 'Flix - Steam';
+    }
+
+    if('faviconUrl' in themeConfig.assets && themeConfig.assets.faviconUrl){
+      const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+      if(link){
+        link.href = themeConfig.assets.faviconUrl ? String(themeConfig.assets.faviconUrl) : '';
+      }else{
+        const link = document.createElement('link');
+        link.rel = 'shortcut icon';
+        link.href = themeConfig.assets.faviconUrl ? String(themeConfig.assets.faviconUrl) : '';
+        document.getElementsByTagName('head')[0].appendChild(link);
+      }
+    }
   }, [themeConfig]);
 
   return <>{children}</>;

@@ -52,11 +52,11 @@ const Genre: React.FC = () => {
         <div className="genre-wrapper">
           <div className="swiper genre-slider">
             <div className="swiper-wrapper">
-              {genres.map((genre) => (
+              {genres.map((genre: any) => (
                 <div key={genre.id} className="swiper-slide genre-item-container">
                   <div className="genre-items">
                     <div className="genre-image">
-                      <img src={genre.image} alt={genre.description} />
+                        {genre.image && <img src={genre.image} alt={genre.description} />}
                       <div className="genre-content"> 
                         <h2>
                           <Link to={`/genre/${genre.slug}`} className="link-theme">

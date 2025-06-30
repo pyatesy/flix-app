@@ -24,8 +24,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm run sass:watch & react-scripts start",
-    "build": "npm run sass && react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "sass": "sass src/styles/main.scss:src/styles/main.css --style compressed",

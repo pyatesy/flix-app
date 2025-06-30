@@ -343,21 +343,21 @@ const FeatureFlagGenerator: React.FC = () => {
         };
         
         try {
-          // const response = await makeApiCall(false, '/attributes', {
-          //   method: 'POST',
-          //   body: JSON.stringify(attributeData)
-          // });
+          const response = await makeApiCall(false, '/attributes', {
+            method: 'POST',
+            body: JSON.stringify(attributeData)
+          });
           
-          // createdAttributes.push({
-          //   id: response.id,
-          //   key: response.key,
-          //   message: 'Attribute created successfully'
-          // });
+          createdAttributes.push({
+            id: response.id,
+            key: response.key,
+            message: 'Attribute created successfully'
+          });
           
-          // // Add to target map for mapping creation
-          // targetAttributeMap[sourceAttribute.key] = response;
+          // Add to target map for mapping creation
+          targetAttributeMap[sourceAttribute.key] = response;
           
-          // console.log(`Created attribute: ${sourceAttribute.key} with ID: ${response.id}`);
+          console.log(`Created attribute: ${sourceAttribute.key} with ID: ${response.id}`);
         } catch (error) {
           console.error(`Failed to create attribute ${sourceAttribute.key}:`, error);
           throw new Error(`Failed to create attribute ${sourceAttribute.key}: ${error instanceof Error ? error.message : 'Unknown error'}`);

@@ -96,7 +96,7 @@ const Hero: React.FC<HeroProps> = ({ mainMovies, sliderMovies, trendingMovies })
                         {movie.quality}
                       </li>
                     </ul>
-                    <h3><Link to={`/movie/${movie.id}`}>{movie.title}</Link></h3>
+                    <h3><Link to={`/movie/${movie.slug}`}>{movie.title}</Link></h3>
                     <p>{movie.genre}</p>
                   </div>
                 </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDecision } from '@optimizely/react-sdk';
 import { useUserId } from '../contexts/UserContext';
 import { generateUserId } from '../utils/userId';
+import FeatureFlagGenerator from './FeatureFlagGenerator';
 
 interface SidePanelProps {
   isOpen: boolean;
@@ -15,12 +16,13 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   const [notAvailableDecision] = useDecision('not_available');
   const [themeCustomizationDecision] = useDecision('theme_customization');
   const [offerBannerDecision] = useDecision('offer_banner');
-  const sdkKey = localStorage.getItem('optimizely_sdk_key') || 'VcBzHwxVF7kba7WCvzSfW';
   const [country, setCountry] = useState(localStorage.getItem('user_country') || '');
   const [device, setDevice] = useState(localStorage.getItem('device') || 'browser');
   const [tempCountry, setTempCountry] = useState(country);
   const [customAttributes, setCustomAttributes] = useState(localStorage.getItem('custom_attributes') || '');
   const [tempCustomAttributes, setTempCustomAttributes] = useState(customAttributes);
+  const [sdkKey, setSdkKey] = useState(localStorage.getItem('optimizely_sdk_key') || 'VcBzHwxVF7kba7WCvzSfW');
+  const [tempSdkKey, setTempSdkKey] = useState(sdkKey);
 
   useEffect(() => {
     // Update Optimizely attributes when country or device changes
@@ -69,6 +71,20 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
       resolve();
     });
     window.location.reload();
+  };
+
+  const handleSdkKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempSdkKey(e.target.value);
+  };
+
+  const handleSdkKeySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (tempSdkKey !== sdkKey) {
+      setSdkKey(tempSdkKey);
+      localStorage.setItem('optimizely_sdk_key', tempSdkKey);
+      // Reload to apply new SDK key
+      window.location.reload();
+    }
   };
 
   const renderJsonValue = (value: any, indent: number = 0) => {
@@ -132,7 +148,14 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
         <button className="close-button" onClick={onClose}>
           <i className="fas fa-times"></i>
         </button>
-        
+        <div className="mt-4">
+            <h4 className="text-white mb-3"><i className="fas fa-magic"/> Feature Flag Generator</h4>
+            <p className="text-light mb-3">
+              Generate Optimizely feature flags in your own account using the current app configuration.
+            </p>
+            <FeatureFlagGenerator />
+          </div>
+          
         <div className="user-id-wrapper bg-dark p-4 rounded">
         <h3><i className="fas fa-user-group"/> Attributes</h3>
           <div className="mb-4">
@@ -242,8 +265,24 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
 
           <div className="mt-4">
             <h4 className="text-white mb-3"><i className="fas fa-globe"/> Optimizely SDK Key</h4>
-            <div className="d-flex align-items-center">
-              <code className="text-light bg-dark border border-secondary p-2 rounded">{sdkKey}</code>
+            <form onSubmit={handleSdkKeySubmit} className="d-flex align-items-center">
+              <input
+                type="text"
+                value={tempSdkKey}
+                onChange={handleSdkKeyChange}
+                placeholder="Enter Optimizely SDK Key"
+                className="form-control bg-dark text-light border-secondary"
+                style={{ fontFamily: 'Courier New', fontSize: '14px' }}
+              />
+              <button
+                type="submit"
+                className="btn btn-secondary ms-2"
+              >
+                <i className="fas fa-check"></i>
+              </button>
+            </form>
+            <div className="mt-2">
+              <small className="text-light">Current: <code className="text-light bg-dark border border-secondary px-2 py-1 rounded">{sdkKey}</code></small>
             </div>
           </div>
 
@@ -256,6 +295,8 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
             {renderFeatureFlagInfo(themeCustomizationDecision, 'theme_customization')}
            
           </div>
+
+          
         </div>
       </div>
     </div>

@@ -17,6 +17,8 @@ export interface ThemeConfig {
   assets: {
     logoUrl: string;
     breadcrumbBackgroundUrl: string;
+    title?: string;
+    faviconUrl?: string;
   };
   fonts: {
     family: string;

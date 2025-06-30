@@ -91,7 +91,7 @@ const RegionOverlay: React.FC = () => {
         ) : (
           <div className="success-message">
             <i className="fa-solid fa-check-circle"></i>
-            <p>Thank you! We'll notify you when Flix becomes available in your region.</p>
+            <p>Thank you! We'll notify you when we are available in your region.</p>
           </div>
         )}
           </div>

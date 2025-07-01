@@ -33,10 +33,10 @@ trendingMovies={movieDatabase
       <section className="upcoming-movie-section fix section-padding">
         <div className="container-fluid">
           {decision.variationKey === 'dreamfyre' && (
-            <MovieSlider movies={movieDatabase.filter(movie => movie.genres.includes(18) || movie.genres.includes(18)).sort((a, b) => a.title.localeCompare(b.title))} genres={genres} title="Dreamfyre's Recommendations" sliderId='dreamfyre-recommendations'/>
+            <MovieSlider movies={movieDatabase.filter(movie => movie.genres.includes(1) || movie.genres.includes(3)).sort((a, b) => a.title.localeCompare(b.title))} genres={genres} title="Dreamfyre's Recommendations" sliderId='dreamfyre-recommendations'/>
           )}
           {decision.variationKey === 'vermax' && (
-            <MovieSlider movies={movieDatabase.filter(movie => movie.genres.includes(18) || movie.genres.includes(18)).sort((b, a) => a.title.localeCompare(b.title))} genres={genres} title="Vermax's Picks" sliderId='vermax-picks'/>
+            <MovieSlider movies={movieDatabase.filter(movie => movie.genres.includes(2) || movie.genres.includes(4)).sort((b, a) => a.title.localeCompare(b.title))} genres={genres} title="Vermax's Picks" sliderId='vermax-picks'/>
           )}
           {decision.variationKey === 'on' && (
             <MovieSlider movies={movieDatabase.sort((a, b) => (b.recentlyViewed?.getTime() || 0) - (a.recentlyViewed?.getTime() || 0)) } genres={genres} title="Recommended Movies" sliderId='recommended-movies'/>
@@ -75,6 +75,11 @@ trendingMovies={movieDatabase
       {/* Unique Genres Section */}
       {genres
         .sort((a: any, b: any) => a.name.localeCompare(b.name))
+        .filter((genre: any) => {
+          // Only include genres that have at least one movie
+          const moviesInGenre = movieDatabase.filter(movie => movie.genres.includes(genre.id));
+          return moviesInGenre.length > 0;
+        })
         .map((genre: any) => (
         <section key={genre.id} className={`${genre.slug}-videos fix section-padding pt-0`}>
           <div className="container-fluid">
@@ -83,7 +88,7 @@ trendingMovies={movieDatabase
                 .sort((a, b) => a.title.localeCompare(b.title))
                 .filter(movie => movie.genres.includes(genre.id))} 
               genres={genres}
-              title={`${genre.name} videos`}
+              title={`${genre.name}`}
               sliderId={`${genre.slug}-videos`}
             />
           </div>

@@ -745,7 +745,7 @@ const FeatureFlagGenerator: React.FC = () => {
     if (config.targetProjectId > 0) {
       fetchEnvironments(config.targetProjectId);
     }
-  }, [config.targetProjectId]);
+  }, [config.targetProjectId, fetchEnvironments]);
 
   // Update selected environment when environment changes
   useEffect(() => {
@@ -1437,7 +1437,7 @@ const FeatureFlagGenerator: React.FC = () => {
                     onChange={(e) => setConfig(prev => ({ ...prev, copyMode: e.target.value as 'dropdown' | 'specific' }))}
                     style={{ accentColor: '#007bff' }}
                   />
-                  <span>Dropdown Mode - Select from available projects</span>
+                  <span>Copy from a project in your own account</span>
                 </label>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
                   <input
@@ -1448,7 +1448,7 @@ const FeatureFlagGenerator: React.FC = () => {
                     onChange={(e) => setConfig(prev => ({ ...prev, copyMode: e.target.value as 'dropdown' | 'specific' }))}
                     style={{ accentColor: '#007bff' }}
                   />
-                  <span>Specific Project Mode - Copy from Project ID 6196917386870784</span>
+                  <span>Copy from the Flix App Project</span>
                 </label>
               </div>
             </div>

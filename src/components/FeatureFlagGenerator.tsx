@@ -248,7 +248,7 @@ const FeatureFlagGenerator: React.FC = () => {
   // Fetch projects
   const fetchProjects = async () => {
     try {
-      const data = await makeApiCall(false, '/projects');
+      const data = await makeApiCall(false, '/projects?limit=100&sort=-created&archived=false');
       const filteredData = data.filter((project: any) => project.platform === 'custom');
       setProjects(filteredData);
     } catch (error) {

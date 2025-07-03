@@ -35,7 +35,8 @@ interface FlagGenerationConfig {
   targetProjectId: number; // Target project to copy to
   environmentId: number;
   environmentKey: string;
-  apiToken: string;
+  targetApiToken: string; // API token for target project (user's key)
+  sourceApiToken: string; // API token for source project (user's key or decrypted key)
   copyMode: 'dropdown' | 'specific'; // New field for copy mode
   specificProjectId: string; // For specific project mode
   specificAccountKey: string; // Encrypted key for specific account
@@ -76,7 +77,8 @@ const FeatureFlagGenerator: React.FC = () => {
     targetProjectId: 0,
     environmentId: 0,
     environmentKey: '',
-    apiToken: '',
+    targetApiToken: '', // API token for target project (user's key)
+    sourceApiToken: '', // API token for source project (user's key or decrypted key)
     copyMode: 'dropdown',
     specificProjectId: '6196917386870784', // Default specific project ID
     specificAccountKey: '',
@@ -153,7 +155,7 @@ const FeatureFlagGenerator: React.FC = () => {
       setPassphrase('');
       
       // Update config with the decrypted key
-      setConfig(prev => ({ ...prev, specificAccountKey: decrypted }));
+      setConfig(prev => ({ ...prev, specificAccountKey: decrypted, sourceApiToken: decrypted }));
       
       displayError('✅ API key decrypted successfully! You can now copy from the specific project.');
     } catch (error) {
@@ -162,11 +164,30 @@ const FeatureFlagGenerator: React.FC = () => {
   };
 
   // Helper function to get the appropriate API token based on copy mode
-  const getApiTokenForMode = (): string => {
+  const getSourceApiToken = (): string => {
     if (config.copyMode === 'specific' && decryptedKey) {
       return decryptedKey;
     }
-    return config.apiToken;
+    return config.sourceApiToken;
+  };
+
+  // Helper function to get the target API token (always user's key)
+  const getTargetApiToken = (): string => {
+    return config.targetApiToken;
+  };
+
+  // Helper function to debug API token usage
+  const debugApiTokenUsage = (operation: string, isSource: boolean = false) => {
+    const token = isSource ? getSourceApiToken() : getTargetApiToken();
+    const tokenType = isSource ? 'Source' : 'Target';
+    const copyMode = config.copyMode;
+    
+    console.log(`=== API Token Debug for ${operation} ===`);
+    console.log(`Copy Mode: ${copyMode}`);
+    console.log(`Token Type: ${tokenType}`);
+    console.log(`Token: ${token.substring(0, 10)}...${token.substring(token.length - 10)}`);
+    console.log(`Token Length: ${token.length}`);
+    console.log(`=====================================`);
   };
 
   // Helper function to get the source project ID based on copy mode
@@ -181,7 +202,7 @@ const FeatureFlagGenerator: React.FC = () => {
   useEffect(() => {
     const savedApiKey = localStorage.getItem('optimizely_api_key');
     if (savedApiKey) {
-      setConfig(prev => ({ ...prev, apiToken: savedApiKey }));
+      setConfig(prev => ({ ...prev, targetApiToken: savedApiKey, sourceApiToken: savedApiKey }));
     } else {
       setShowApiKeyInput(true);
     }
@@ -189,7 +210,7 @@ const FeatureFlagGenerator: React.FC = () => {
 
   // Save API key to localStorage when it changes
   const handleApiKeyChange = (apiKey: string) => {
-    setConfig(prev => ({ ...prev, apiToken: apiKey }));
+    setConfig(prev => ({ ...prev, targetApiToken: apiKey, sourceApiToken: apiKey }));
     if (apiKey.trim()) {
       localStorage.setItem('optimizely_api_key', apiKey);
       setShowApiKeyInput(false);
@@ -199,7 +220,7 @@ const FeatureFlagGenerator: React.FC = () => {
   // Clear API key and show input
   const handleReEnterApiKey = () => {
     localStorage.removeItem('optimizely_api_key');
-    setConfig(prev => ({ ...prev, apiToken: '' }));
+    setConfig(prev => ({ ...prev, targetApiToken: '', sourceApiToken: '' }));
     setShowApiKeyInput(true);
   };
 
@@ -227,11 +248,15 @@ const FeatureFlagGenerator: React.FC = () => {
   };
 
   // Helper function to make API calls
-  const makeApiCall = async (flags: boolean, endpoint: string, options: RequestInit = {}) => {
+  const makeApiCall = async (flags: boolean, endpoint: string, apiToken: string, options: RequestInit = {}) => {
+    // Add debugging information
+    //console.log(`Making API call to: ${flags ? API_FLAGS_URL : API_BASE_URL}${endpoint}`);
+    //console.log(`Using API token: ${apiToken.substring(0, 10)}...${apiToken.substring(apiToken.length - 10)}`);
+    
     const response = await fetch(`${flags ? API_FLAGS_URL : API_BASE_URL}${endpoint}`, {
       ...options,
       headers: {
-        'Authorization': `Bearer ${getApiTokenForMode()}`,
+        'Authorization': `Bearer ${apiToken}`,
         'Content-Type': 'application/json',
         ...options.headers,
       },
@@ -239,6 +264,15 @@ const FeatureFlagGenerator: React.FC = () => {
 
     if (!response.ok) {
       const errorText = await response.text();
+      console.error(`API call failed: ${response.status} ${response.statusText}`);
+      console.error(`Error details: ${errorText}`);
+      console.error(`Endpoint: ${flags ? API_FLAGS_URL : API_BASE_URL}${endpoint}`);
+      console.error(`Token used: ${apiToken.substring(0, 10)}...${apiToken.substring(apiToken.length - 10)}`);
+      
+      if (response.status === 401) {
+        throw new Error(`Authentication failed (401): The API token may be expired, invalid, or lack required permissions. Please check your API token and try again.`);
+      }
+      
       throw new Error(`API call failed: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
@@ -249,16 +283,16 @@ const FeatureFlagGenerator: React.FC = () => {
   const fetchProjects = async () => {
     try {
     let allData: any[] = [];
-      const data = await makeApiCall(false, '/projects?per_page=100&page=1');
+      const data = await makeApiCall(false, '/projects?per_page=100&page=1', getTargetApiToken());
       allData = [...data];
       if(data.length === 100){
-        const data2 = await makeApiCall(false, '/projects?per_page=100&page=2');
+        const data2 = await makeApiCall(false, '/projects?per_page=100&page=2', getTargetApiToken());
         allData = [...data, ...data2];
         if(data2.length === 100){
-          const data3 = await makeApiCall(false, '/projects?per_page=100&page=3');
+          const data3 = await makeApiCall(false, '/projects?per_page=100&page=3', getTargetApiToken());
           allData = [...data, ...data2, ...data3];
           if(data3.length === 100){
-            const data4 = await makeApiCall(false, '/projects?per_page=100&page=4');
+            const data4 = await makeApiCall(false, '/projects?per_page=100&page=4', getTargetApiToken());
             allData = [...data, ...data2, ...data3, ...data4];
           }
         }
@@ -275,7 +309,7 @@ const FeatureFlagGenerator: React.FC = () => {
   // Fetch environments for a project
   const fetchEnvironments = useCallback(async (projectId: number) => {
     try {
-      const data = await makeApiCall(true, `/projects/${projectId}/environments`);
+      const data = await makeApiCall(true, `/projects/${projectId}/environments`, getTargetApiToken());
       setEnvironments(data.items);
     } catch (error) {
       console.error('Failed to fetch environments:', error);
@@ -285,7 +319,7 @@ const FeatureFlagGenerator: React.FC = () => {
   // Check if a flag exists
   const checkFlagExists = async (flagKey: string) => {
     try {
-      await makeApiCall(true, `/projects/${config.targetProjectId}/flags/${flagKey}`);
+      await makeApiCall(true, `/projects/${config.targetProjectId}/flags/${flagKey}`, getTargetApiToken());
       return true;
     } catch (error) {
       return false;
@@ -295,7 +329,7 @@ const FeatureFlagGenerator: React.FC = () => {
   // Check if variable definitions exist for a flag
   const checkVariableDefinitionsExist = async (flagKey: string) => {
     try {
-      const response = await makeApiCall(true, `/projects/${config.targetProjectId}/flags/${flagKey}/variable_definitions`);
+      const response = await makeApiCall(true, `/projects/${config.targetProjectId}/flags/${flagKey}/variable_definitions`, getTargetApiToken());
       return response.items && Array.isArray(response.items) && response.items.length > 0;
     } catch (error) {
       return false;
@@ -305,7 +339,7 @@ const FeatureFlagGenerator: React.FC = () => {
   // Check if ruleset exists for a flag
   const checkRulesetExists = async (flagKey: string) => {
     try {
-      const response = await makeApiCall(true, `/projects/${config.targetProjectId}/flags/${flagKey}/environments/${config.environmentKey}/ruleset`);
+      const response = await makeApiCall(true, `/projects/${config.targetProjectId}/flags/${flagKey}/environments/${config.environmentKey}/ruleset`, getTargetApiToken());
       return response.rules && Object.keys(response.rules).length > 0;
     } catch (error) {
       return false;
@@ -317,7 +351,7 @@ const FeatureFlagGenerator: React.FC = () => {
     try {
       // Step 1: Get source attributes from the source project
       const sourceProjectId = getSourceProjectId();
-      const sourceAttributesResponse = await makeApiCall(false, `/attributes?project_id=${sourceProjectId}`, {
+      const sourceAttributesResponse = await makeApiCall(false, `/attributes?project_id=${sourceProjectId}`, getSourceApiToken(), {
         method: 'GET'
       });
       
@@ -330,7 +364,7 @@ const FeatureFlagGenerator: React.FC = () => {
       console.log('Source attributes from datafile project:', sourceAttributes);
       
       // Step 2: Get target attributes from the selected project
-      const targetAttributesResponse = await makeApiCall(false, `/attributes?project_id=${config.targetProjectId}`, {
+      const targetAttributesResponse = await makeApiCall(false, `/attributes?project_id=${config.targetProjectId}`, getTargetApiToken(), {
         method: 'GET'
       });
       
@@ -359,7 +393,7 @@ const FeatureFlagGenerator: React.FC = () => {
         };
         
         try {
-          const response = await makeApiCall(false, '/attributes', {
+          const response = await makeApiCall(false, '/attributes', getTargetApiToken(), {
             method: 'POST',
             body: JSON.stringify(attributeData)
           });
@@ -418,7 +452,7 @@ const FeatureFlagGenerator: React.FC = () => {
     try {
       // Step 1: Get source audiences from the source project
       const sourceProjectId = getSourceProjectId();
-      const sourceAudiencesResponse = await makeApiCall(false, `/audiences?project_id=${sourceProjectId}`, {
+      const sourceAudiencesResponse = await makeApiCall(false, `/audiences?project_id=${sourceProjectId}`, getSourceApiToken(), {
         method: 'GET'
       });
       
@@ -431,7 +465,7 @@ const FeatureFlagGenerator: React.FC = () => {
       console.log('Source audiences from datafile project:', sourceAudiences);
       
       // Step 2: Get target audiences from the selected project
-      const targetAudiencesResponse = await makeApiCall(false, `/audiences?project_id=${config.targetProjectId}`, {
+      const targetAudiencesResponse = await makeApiCall(false, `/audiences?project_id=${config.targetProjectId}`, getTargetApiToken(), {
         method: 'GET'
       });
       
@@ -481,7 +515,7 @@ const FeatureFlagGenerator: React.FC = () => {
         };
         
         try {
-          const response = await makeApiCall(false, '/audiences', {
+          const response = await makeApiCall(false, '/audiences', getTargetApiToken(), {
             method: 'POST',
             body: JSON.stringify(audienceData)
           });
@@ -751,10 +785,10 @@ const FeatureFlagGenerator: React.FC = () => {
 
   // Load projects when API token is set
   useEffect(() => {
-    if (getApiTokenForMode() && projects.length === 0) {
+    if (getTargetApiToken() && projects.length === 0) {
       fetchProjects();
     }
-  }, [getApiTokenForMode]);
+  }, [getTargetApiToken]);
 
   // Load environments when project is selected
   useEffect(() => {
@@ -790,9 +824,13 @@ const FeatureFlagGenerator: React.FC = () => {
   // Create flags from the source project
   const createFlagsFromSource = async () => {
     try {
+      // Debug API token usage
+      debugApiTokenUsage('Flag Creation - Source Read', true);
+      debugApiTokenUsage('Flag Creation - Target Write', false);
+      
       // Step 1: Get source flags from the source project
       const sourceProjectId = getSourceProjectId();
-      const sourceFlagsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags`, {
+      const sourceFlagsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags`, getSourceApiToken(), {
         method: 'GET'
       });
       
@@ -805,7 +843,7 @@ const FeatureFlagGenerator: React.FC = () => {
       console.log('Source flags from source project:', sourceFlags);
       
       // Step 2: Get target flags from the target project
-      const targetFlagsResponse = await makeApiCall(true, `/projects/${config.targetProjectId}/flags`, {
+      const targetFlagsResponse = await makeApiCall(true, `/projects/${config.targetProjectId}/flags`, getTargetApiToken(), {
         method: 'GET'
       });
       
@@ -834,7 +872,8 @@ const FeatureFlagGenerator: React.FC = () => {
         };
         
         try {
-          const response = await makeApiCall(true, `/projects/${config.targetProjectId}/flags`, {
+          console.log(`Creating flag: ${sourceFlag.key} with target API token`);
+          const response = await makeApiCall(true, `/projects/${config.targetProjectId}/flags`, getTargetApiToken(), {
             method: 'POST',
             body: JSON.stringify(flagData)
           });
@@ -881,7 +920,7 @@ const FeatureFlagGenerator: React.FC = () => {
     try {
       // Step 1: Get source flags and their variables from the source project
       const sourceProjectId = getSourceProjectId();
-      const sourceFlagsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags`, {
+      const sourceFlagsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags`, getSourceApiToken(), {
         method: 'GET'
       });
       
@@ -891,7 +930,7 @@ const FeatureFlagGenerator: React.FC = () => {
       // Collect all variables from all source flags
       for (const sourceFlag of sourceFlags) {
         try {
-          const sourceVariablesResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags/${sourceFlag.key}/variable_definitions`, {
+          const sourceVariablesResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags/${sourceFlag.key}/variable_definitions`, getSourceApiToken(), {
             method: 'GET'
           });
           
@@ -913,7 +952,7 @@ const FeatureFlagGenerator: React.FC = () => {
       
       // Step 2: Get target flags and their variables from the target project
       const targetProjectId = config.targetProjectId;
-      const targetFlagsResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags`, {
+      const targetFlagsResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags`, getTargetApiToken(), {
         method: 'GET'
       });
       
@@ -923,7 +962,7 @@ const FeatureFlagGenerator: React.FC = () => {
       // Collect all variables from all target flags
       for (const targetFlag of targetFlags) {
         try {
-          const targetVariablesResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags/${targetFlag.key}/variable_definitions`, {
+          const targetVariablesResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags/${targetFlag.key}/variable_definitions`, getTargetApiToken(), {
             method: 'GET'
           });
           
@@ -961,7 +1000,7 @@ const FeatureFlagGenerator: React.FC = () => {
         };
         
         try {
-          const response = await makeApiCall(true, `/projects/${targetProjectId}/flags/${sourceVariable.flagKey}/variable_definitions`, {
+          const response = await makeApiCall(true, `/projects/${targetProjectId}/flags/${sourceVariable.flagKey}/variable_definitions`, getTargetApiToken(), {
             method: 'POST',
             body: JSON.stringify(variableData)
           });
@@ -1014,7 +1053,7 @@ const FeatureFlagGenerator: React.FC = () => {
     try {
       // Step 1: Get source flags and their variations from the source project
       const sourceProjectId = getSourceProjectId();
-      const sourceFlagsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags`, {
+      const sourceFlagsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags`, getSourceApiToken(), {
         method: 'GET'
       });
       
@@ -1024,7 +1063,7 @@ const FeatureFlagGenerator: React.FC = () => {
       // Collect all variations from all source flags
       for (const sourceFlag of sourceFlags) {
         try {
-          const sourceVariationsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags/${sourceFlag.key}/variations`, {
+          const sourceVariationsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags/${sourceFlag.key}/variations`, getSourceApiToken(), {
             method: 'GET'
           });
           
@@ -1046,7 +1085,7 @@ const FeatureFlagGenerator: React.FC = () => {
       
       // Step 2: Get target flags and their variations from the target project
       const targetProjectId = config.targetProjectId;
-      const targetFlagsResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags`, {
+      const targetFlagsResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags`, getTargetApiToken(), {
         method: 'GET'
       });
       
@@ -1056,7 +1095,7 @@ const FeatureFlagGenerator: React.FC = () => {
       // Collect all variations from all target flags
       for (const targetFlag of targetFlags) {
         try {
-          const targetVariationsResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags/${targetFlag.key}/variations`, {
+          const targetVariationsResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags/${targetFlag.key}/variations`, getTargetApiToken(), {
             method: 'GET'
           });
           
@@ -1108,7 +1147,7 @@ const FeatureFlagGenerator: React.FC = () => {
         };
         
         try {
-          const response = await makeApiCall(true, `/projects/${targetProjectId}/flags/${sourceVariation.flagKey}/variations`, {
+          const response = await makeApiCall(true, `/projects/${targetProjectId}/flags/${sourceVariation.flagKey}/variations`, getTargetApiToken(), {
             method: 'POST',
             body: JSON.stringify(variationData)
           });
@@ -1161,7 +1200,7 @@ const FeatureFlagGenerator: React.FC = () => {
     try {
       // Step 1: Get source flags and their rulesets from the source project
       const sourceProjectId = getSourceProjectId();
-      const sourceFlagsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags`, {
+      const sourceFlagsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags`, getSourceApiToken(), {
         method: 'GET'
       });
       
@@ -1172,7 +1211,7 @@ const FeatureFlagGenerator: React.FC = () => {
       for (const sourceFlag of sourceFlags) {
         try {
           // Get ruleset for each environment in the source project
-          const sourceEnvironmentsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/environments`, {
+          const sourceEnvironmentsResponse = await makeApiCall(true, `/projects/${sourceProjectId}/environments`, getSourceApiToken(), {
             method: 'GET'
           });
           
@@ -1180,7 +1219,7 @@ const FeatureFlagGenerator: React.FC = () => {
           
           for (const sourceEnv of sourceEnvironments) {
             try {
-              const sourceRulesetResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags/${sourceFlag.key}/environments/${sourceEnv.key}/ruleset`, {
+              const sourceRulesetResponse = await makeApiCall(true, `/projects/${sourceProjectId}/flags/${sourceFlag.key}/environments/${sourceEnv.key}/ruleset`, getSourceApiToken(), {
                 method: 'GET'
               });
               
@@ -1206,7 +1245,7 @@ const FeatureFlagGenerator: React.FC = () => {
       
       // Step 2: Get target flags and their rulesets from the target project
       const targetProjectId = config.targetProjectId;
-      const targetFlagsResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags`, {
+      const targetFlagsResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags`, getTargetApiToken(), {
         method: 'GET'
       });
       
@@ -1217,7 +1256,7 @@ const FeatureFlagGenerator: React.FC = () => {
       for (const targetFlag of targetFlags) {
         try {
           // Get ruleset for each environment in the target project
-          const targetEnvironmentsResponse = await makeApiCall(true, `/projects/${targetProjectId}/environments`, {
+          const targetEnvironmentsResponse = await makeApiCall(true, `/projects/${targetProjectId}/environments`, getTargetApiToken(), {
             method: 'GET'
           });
           
@@ -1225,7 +1264,7 @@ const FeatureFlagGenerator: React.FC = () => {
           
           for (const targetEnv of targetEnvironments) {
             try {
-              const targetRulesetResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags/${targetFlag.key}/environments/${targetEnv.key}/ruleset`, {
+              const targetRulesetResponse = await makeApiCall(true, `/projects/${targetProjectId}/flags/${targetFlag.key}/environments/${targetEnv.key}/ruleset`, getTargetApiToken(), {
                 method: 'GET'
               });
               
@@ -1310,7 +1349,7 @@ const FeatureFlagGenerator: React.FC = () => {
           // First, check if the ruleset already exists
           let existingRuleset = null;
           try {
-            existingRuleset = await makeApiCall(true, `/projects/${targetProjectId}/flags/${sourceRuleset.flagKey}/environments/${sourceRuleset.environmentKey}/ruleset`, {
+            existingRuleset = await makeApiCall(true, `/projects/${targetProjectId}/flags/${sourceRuleset.flagKey}/environments/${sourceRuleset.environmentKey}/ruleset`, getTargetApiToken(), {
               method: 'GET'
             });
           } catch (error) {
@@ -1351,7 +1390,7 @@ const FeatureFlagGenerator: React.FC = () => {
             });
           }
           
-          const response = await makeApiCall(true, `/projects/${targetProjectId}/flags/${sourceRuleset.flagKey}/environments/${sourceRuleset.environmentKey}/ruleset`, {
+          const response = await makeApiCall(true, `/projects/${targetProjectId}/flags/${sourceRuleset.flagKey}/environments/${sourceRuleset.environmentKey}/ruleset`, getTargetApiToken(), {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json-patch+json'
@@ -1477,7 +1516,7 @@ const FeatureFlagGenerator: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <input
                   type={showApiKeyInput ? 'text' : 'password'}
-                  value={config.apiToken}
+                  value={config.targetApiToken}
                   onChange={(e) => handleApiKeyChange(e.target.value)}
                   placeholder="Enter your Optimizely API token"
                   style={{

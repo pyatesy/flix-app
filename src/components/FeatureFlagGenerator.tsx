@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 // import { decryptOptimizelyKey, validateEncryptedKey } from './secure/decryptKey';
 
 interface OptimizelyProject {
@@ -248,8 +248,24 @@ const FeatureFlagGenerator: React.FC = () => {
   // Fetch projects
   const fetchProjects = async () => {
     try {
-      const data = await makeApiCall(false, '/projects');
-      const filteredData = data.filter((project: any) => project.platform === 'custom');
+    let allData: any[] = [];
+      const data = await makeApiCall(false, '/projects?per_page=100&page=1');
+      allData = [...data];
+      if(data.length === 100){
+        const data2 = await makeApiCall(false, '/projects?per_page=100&page=2');
+        allData = [...data, ...data2];
+        if(data2.length === 100){
+          const data3 = await makeApiCall(false, '/projects?per_page=100&page=3');
+          allData = [...data, ...data2, ...data3];
+          if(data3.length === 100){
+            const data4 = await makeApiCall(false, '/projects?per_page=100&page=4');
+            allData = [...data, ...data2, ...data3, ...data4];
+          }
+        }
+      }
+      
+      
+      const filteredData = allData.filter((project: any) => project.platform === 'custom' && project.status === 'active'   ).sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
       setProjects(filteredData);
     } catch (error) {
       console.error('Failed to fetch projects:', error);
@@ -257,14 +273,14 @@ const FeatureFlagGenerator: React.FC = () => {
   };
 
   // Fetch environments for a project
-  const fetchEnvironments = async (projectId: number) => {
+  const fetchEnvironments = useCallback(async (projectId: number) => {
     try {
       const data = await makeApiCall(true, `/projects/${projectId}/environments`);
       setEnvironments(data.items);
     } catch (error) {
       console.error('Failed to fetch environments:', error);
     }
-  };
+  }, [makeApiCall]);
 
   // Check if a flag exists
   const checkFlagExists = async (flagKey: string) => {

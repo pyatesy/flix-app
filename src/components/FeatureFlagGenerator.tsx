@@ -248,8 +248,8 @@ const FeatureFlagGenerator: React.FC = () => {
   // Fetch projects
   const fetchProjects = async () => {
     try {
-      const data = await makeApiCall(false, '/projects?limit=100&sort=-created&archived=false');
-      const filteredData = data.filter((project: any) => project.platform === 'custom');
+      const data = await makeApiCall(false, '/projects?limit=100');
+      const filteredData = data.filter((project: any) => project.platform === 'custom' && project.status === 'active').sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
       setProjects(filteredData);
     } catch (error) {
       console.error('Failed to fetch projects:', error);

@@ -155,7 +155,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
             </p>
             <FeatureFlagGenerator />
           </div>
-          
+        
         <div className="user-id-wrapper bg-dark p-4 rounded">
         <h3><i className="fas fa-user-group"/> Attributes</h3>
           <div className="mb-4">
@@ -293,7 +293,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
             {renderFeatureFlagInfo(offerBannerDecision, 'offer_banner')}
             {renderFeatureFlagInfo(subscriptionDecision, 'subscription_tiers')}
             {renderFeatureFlagInfo(themeCustomizationDecision, 'theme_customization')}
-           
+            
           </div>
 
           

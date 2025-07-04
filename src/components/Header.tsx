@@ -34,6 +34,9 @@ const Header: React.FC = () => {
                       <li>
                         <Link to="/movies">Movies</Link>
                       </li>
+                      <li>
+                        <Link to="/pricing">Subscriptions</Link>
+                      </li>
                       {/*<li>
                         <Link to="/tv-shows">TV Shows</Link>
                       </li>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// import { decryptOptimizelyKey, validateEncryptedKey } from './secure/decryptKey';
+import { decryptOptimizelyKey, validateEncryptedKey } from '../secure/decryptKey';
+import { useOptimizelyAPI } from '../hooks/useOptimizelyAPI';
 
 interface OptimizelyProject {
   id: number;
@@ -14,21 +15,6 @@ interface OptimizelyEnvironment {
   sdk_key?: string;
 }
 
-// interface OptimizelyAttribute {
-//   id: number;
-//   key: string;
-//   name: string;
-//   description?: string;
-//   type: 'string' | 'number' | 'boolean';
-// }
-
-// interface OptimizelyAudience {
-//   id: number;
-//   name: string;
-//   description?: string;
-//   conditions: any;
-//   project_id: number;
-// }
 
 interface FlagGenerationConfig {
   sourceProjectId: number; // Source project to copy from
@@ -60,7 +46,7 @@ interface ErrorDisplay {
 // For now, we'll load it dynamically
 const loadEncryptedKey = async (): Promise<string> => {
   try {
-    const response = await fetch('/src/secure/optimizely_key.enc');
+    const response = await fetch('/secure/optimizely_key.enc');
     const text = await response.text();
     // Remove any comments or empty lines
     return text.split('\n').find(line => !line.startsWith('#') && line.trim()) || '';
@@ -84,8 +70,21 @@ const FeatureFlagGenerator: React.FC = () => {
     specificAccountKey: '',
   });
   
-  const [projects, setProjects] = useState<OptimizelyProject[]>([]);
-  const [environments, setEnvironments] = useState<OptimizelyEnvironment[]>([]);
+  // Use the new API service layer
+  const {
+    apiState,
+    projects,
+    environments,
+    isProjectsLoading,
+    loadingMessage,
+    fetchProjects,
+    fetchEnvironments,
+    createAttributes,
+    createAudiences,
+    clearProjectsCache,
+    clearError: clearApiError,
+  } = useOptimizelyAPI();
+  
   // const [isLoading, setIsLoading] = useState(false);
   const [generationSteps, setGenerationSteps] = useState<GenerationStep[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -104,40 +103,6 @@ const FeatureFlagGenerator: React.FC = () => {
   const API_BASE_URL = 'https://api.optimizely.com/v2';
   const API_FLAGS_URL = 'https://api.optimizely.com/flags/v1/';
 
-  // Decryption functions (simplified implementation for better browser compatibility)
-  const decryptOptimizelyKey = async (encrypted: string, passphrase: string): Promise<string> => {
-    try {
-      console.log('Starting decryption...');
-      
-      // For now, let's use a simple approach - just return the API key directly
-      // This is a temporary solution to get things working
-      // In production, you'd want proper encryption
-      
-      // Check if the passphrase is correct by trying to decrypt a known value
-      if (passphrase === 'flixapp') {
-        // Return the API key directly for now
-        return '2:aRyR67RQ9xuvS1NInvuyT84PdrJDJLelaOJANGF7K2qcJcUC8rXU';
-      } else {
-        throw new Error('Incorrect passphrase');
-      }
-      
-      // TODO: Implement proper Web Crypto API decryption
-      // The issue is that Web Crypto API PBKDF2 might not match Node.js exactly
-      // For now, this simple approach will get the functionality working
-      
-    } catch (error) {
-      console.error('Decryption error details:', error);
-      throw new Error(`Failed to decrypt API key: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  };
-
-  const validateEncryptedKey = (encrypted: string): boolean => {
-    try {
-      return encrypted.length > 0 && !encrypted.startsWith('#');
-    } catch {
-      return false;
-    }
-  };
 
   // Handle passphrase input and decryption
   const handlePassphraseSubmit = async () => {
@@ -198,20 +163,26 @@ const FeatureFlagGenerator: React.FC = () => {
     return config.sourceProjectId;
   };
 
-  // Load API key from localStorage on component mount
-  useEffect(() => {
-    const savedApiKey = localStorage.getItem('optimizely_api_key');
-    if (savedApiKey) {
-      setConfig(prev => ({ ...prev, targetApiToken: savedApiKey, sourceApiToken: savedApiKey }));
-    } else {
-      setShowApiKeyInput(true);
-    }
-  }, []);
+      // Load API key from localStorage on component mount
+    useEffect(() => {
+      console.log('Loading API key from localStorage...');
+      const savedApiKey = localStorage.getItem('optimizely_api_key');
+      console.log(`Saved API key found: ${savedApiKey ? 'YES' : 'NO'}`);
+      if (savedApiKey) {
+        console.log(`Setting API tokens from localStorage`);
+        setConfig(prev => ({ ...prev, targetApiToken: savedApiKey, sourceApiToken: savedApiKey }));
+      } else {
+        console.log(`No saved API key, showing input`);
+        setShowApiKeyInput(true);
+      }
+    }, []);
 
   // Save API key to localStorage when it changes
   const handleApiKeyChange = (apiKey: string) => {
+    console.log(`handleApiKeyChange called with key: ${apiKey ? apiKey.substring(0, 10) + '...' + apiKey.substring(apiKey.length - 10) : 'EMPTY'}`);
     setConfig(prev => ({ ...prev, targetApiToken: apiKey, sourceApiToken: apiKey }));
     if (apiKey.trim()) {
+      console.log('Saving API key to localStorage');
       localStorage.setItem('optimizely_api_key', apiKey);
       setShowApiKeyInput(false);
     }
@@ -222,6 +193,8 @@ const FeatureFlagGenerator: React.FC = () => {
     localStorage.removeItem('optimizely_api_key');
     setConfig(prev => ({ ...prev, targetApiToken: '', sourceApiToken: '' }));
     setShowApiKeyInput(true);
+    // Clear projects cache when API key changes
+    clearProjectsCache();
   };
 
   // Display error in text area instead of popup
@@ -249,9 +222,10 @@ const FeatureFlagGenerator: React.FC = () => {
 
   // Helper function to make API calls
   const makeApiCall = async (flags: boolean, endpoint: string, apiToken: string, options: RequestInit = {}) => {
-    // Add debugging information
-    //console.log(`Making API call to: ${flags ? API_FLAGS_URL : API_BASE_URL}${endpoint}`);
-    //console.log(`Using API token: ${apiToken.substring(0, 10)}...${apiToken.substring(apiToken.length - 10)}`);
+    
+    if (!apiToken || !apiToken.trim()) {
+      throw new Error('API token is empty or invalid');
+    }
     
     const response = await fetch(`${flags ? API_FLAGS_URL : API_BASE_URL}${endpoint}`, {
       ...options,
@@ -264,11 +238,7 @@ const FeatureFlagGenerator: React.FC = () => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`API call failed: ${response.status} ${response.statusText}`);
-      console.error(`Error details: ${errorText}`);
-      console.error(`Endpoint: ${flags ? API_FLAGS_URL : API_BASE_URL}${endpoint}`);
-      console.error(`Token used: ${apiToken.substring(0, 10)}...${apiToken.substring(apiToken.length - 10)}`);
-      
+            
       if (response.status === 401) {
         throw new Error(`Authentication failed (401): The API token may be expired, invalid, or lack required permissions. Please check your API token and try again.`);
       }
@@ -279,42 +249,54 @@ const FeatureFlagGenerator: React.FC = () => {
     return response.json();
   };
 
-  // Fetch projects
-  const fetchProjects = async () => {
+  // Wrapper functions to use the API service
+  const handleFetchProjects = async () => {
     try {
-    let allData: any[] = [];
-      const data = await makeApiCall(false, '/projects?per_page=100&page=1', getTargetApiToken());
-      allData = [...data];
-      if(data.length === 100){
-        const data2 = await makeApiCall(false, '/projects?per_page=100&page=2', getTargetApiToken());
-        allData = [...data, ...data2];
-        if(data2.length === 100){
-          const data3 = await makeApiCall(false, '/projects?per_page=100&page=3', getTargetApiToken());
-          allData = [...data, ...data2, ...data3];
-          if(data3.length === 100){
-            const data4 = await makeApiCall(false, '/projects?per_page=100&page=4', getTargetApiToken());
-            allData = [...data, ...data2, ...data3, ...data4];
-          }
-        }
+      console.log('handleFetchProjects called');
+      console.log(`Current config:`, config);
+      console.log(`Copy mode: ${config.copyMode}`);
+      console.log(`Decrypted key: ${decryptedKey ? 'SET' : 'NOT SET'}`);
+      
+      const sourceToken = getSourceApiToken();
+      const targetToken = getTargetApiToken();
+      console.log(`Source token: ${sourceToken ? sourceToken.substring(0, 10) + '...' + sourceToken.substring(sourceToken.length - 10) : 'EMPTY'}`);
+      console.log(`Target token: ${targetToken ? targetToken.substring(0, 10) + '...' + targetToken.substring(targetToken.length - 10) : 'EMPTY'}`);
+      
+      if (!targetToken || !targetToken.trim()) {
+        throw new Error('Target API token is required. Please enter your API token first.');
       }
       
-      
-      const filteredData = allData.filter((project: any) => project.platform === 'custom' && project.status === 'active'   ).sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
-      setProjects(filteredData);
+      await fetchProjects(sourceToken, targetToken);
+      clearError(); // Clear error after loading
     } catch (error) {
       console.error('Failed to fetch projects:', error);
+      displayError(`Failed to fetch projects: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
-  // Fetch environments for a project
-  const fetchEnvironments = useCallback(async (projectId: number) => {
+  const handleFetchEnvironments = useCallback(async (projectId: number) => {
     try {
-      const data = await makeApiCall(true, `/projects/${projectId}/environments`, getTargetApiToken());
-      setEnvironments(data.items);
+      console.log(`Fetching environments for project ${projectId}`);
+      console.log(`Current config:`, config);
+      console.log(`Copy mode: ${config.copyMode}`);
+      console.log(`Decrypted key: ${decryptedKey ? 'SET' : 'NOT SET'}`);
+      
+      const sourceToken = getSourceApiToken();
+      const targetToken = getTargetApiToken();
+      console.log(`Source token: ${sourceToken ? sourceToken.substring(0, 10) + '...' + sourceToken.substring(sourceToken.length - 10) : 'EMPTY'}`);
+      console.log(`Target token: ${targetToken ? targetToken.substring(0, 10) + '...' + targetToken.substring(targetToken.length - 10) : 'EMPTY'}`);
+      
+      if (!targetToken || !targetToken.trim()) {
+        throw new Error('Target API token is required. Please enter your API token first.');
+      }
+      
+      await fetchEnvironments(projectId, sourceToken, targetToken);
+      console.log('Environments fetched successfully');
     } catch (error) {
       console.error('Failed to fetch environments:', error);
+      displayError(`Failed to fetch environments: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-  }, [makeApiCall]);
+  }, [fetchEnvironments, config, decryptedKey]);
 
   // Check if a flag exists
   const checkFlagExists = async (flagKey: string) => {
@@ -346,93 +328,13 @@ const FeatureFlagGenerator: React.FC = () => {
     }
   };
 
-  // Create attributes for the project using datafile
-  const createAttributes = async () => {
+  // Wrapper for createAttributes using API service
+  const handleCreateAttributes = async () => {
     try {
-      // Step 1: Get source attributes from the source project
       const sourceProjectId = getSourceProjectId();
-      const sourceAttributesResponse = await makeApiCall(false, `/attributes?project_id=${sourceProjectId}`, getSourceApiToken(), {
-        method: 'GET'
-      });
-      
-      const sourceAttributes = sourceAttributesResponse || [];
-      const sourceAttributeMap: {[key: string]: any} = {};
-      sourceAttributes.forEach((attribute: any) => {
-        sourceAttributeMap[attribute.key] = attribute;
-      });
-      
-      console.log('Source attributes from datafile project:', sourceAttributes);
-      
-      // Step 2: Get target attributes from the selected project
-      const targetAttributesResponse = await makeApiCall(false, `/attributes?project_id=${config.targetProjectId}`, getTargetApiToken(), {
-        method: 'GET'
-      });
-      
-      const targetAttributes = targetAttributesResponse || [];
-      const targetAttributeMap: {[key: string]: any} = {};
-      targetAttributes.forEach((attribute: any) => {
-        targetAttributeMap[attribute.key] = attribute;
-      });
-      
-      console.log('Target attributes from selected project:', targetAttributes);
-      
-      // Step 3: Compare and create missing attributes
-      const attributesToCreate = Object.values(sourceAttributeMap).filter((sourceAttr: any) => {
-        return !targetAttributeMap[sourceAttr.key];
-      });
-      
-      const createdAttributes: any[] = [];
-      
-      for (const sourceAttribute of attributesToCreate) {
-        // Prepare attribute data according to API specification - DO NOT include id field
-        const attributeData = {
-          key: sourceAttribute.key,
-          name: sourceAttribute.name || sourceAttribute.key,
-          description: sourceAttribute.description || `Auto-generated attribute for ${sourceAttribute.key}`,
-          project_id: config.targetProjectId
-        };
-        
-        try {
-          const response = await makeApiCall(false, '/attributes', getTargetApiToken(), {
-            method: 'POST',
-            body: JSON.stringify(attributeData)
-          });
-          
-          createdAttributes.push({
-            id: response.id,
-            key: response.key,
-            message: 'Attribute created successfully'
-          });
-          
-          // Add to target map for mapping creation
-          targetAttributeMap[sourceAttribute.key] = response;
-          
-          console.log(`Created attribute: ${sourceAttribute.key} with ID: ${response.id}`);
-        } catch (error) {
-          console.error(`Failed to create attribute ${sourceAttribute.key}:`, error);
-          throw new Error(`Failed to create attribute ${sourceAttribute.key}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
-      }
-      
-      // Step 4: Create mapping from source IDs to target IDs
-      const newAttributeMappings: {[key: string]: string} = {};
-      Object.values(sourceAttributeMap).forEach((sourceAttr: any) => {
-        const targetAttr = targetAttributeMap[sourceAttr.key];
-        if (targetAttr) {
-          newAttributeMappings[sourceAttr.id] = targetAttr.id;
-        }
-      });
-      
-      // Update the attribute mappings state
-      // setAttributeMappings(newAttributeMappings);
-      
-      return { 
-        message: `Created ${createdAttributes.length} attributes`, 
-        attributes: createdAttributes, 
-        mappings: newAttributeMappings,
-        sourceAttributes,
-        targetAttributes
-      };
+      const sourceToken = getSourceApiToken();
+      const targetToken = getTargetApiToken();
+      return await createAttributes(sourceProjectId, config.targetProjectId, sourceToken, targetToken);
     } catch (error) {
       throw new Error(`Failed to create attributes: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
@@ -447,114 +349,15 @@ const FeatureFlagGenerator: React.FC = () => {
   //   return conditions;
   // };
 
-  // Create audiences from the datafile
-  const createAudiences = async () => {
+  // Wrapper for createAudiences using API service
+  const handleCreateAudiences = async () => {
     try {
-      // Step 1: Get source audiences from the source project
       const sourceProjectId = getSourceProjectId();
-      const sourceAudiencesResponse = await makeApiCall(false, `/audiences?project_id=${sourceProjectId}`, getSourceApiToken(), {
-        method: 'GET'
-      });
-      
-      const sourceAudiences = sourceAudiencesResponse || [];
-      const sourceAudienceMap: {[key: string]: any} = {};
-      sourceAudiences.forEach((audience: any) => {
-        sourceAudienceMap[audience.name] = audience;
-      });
-      
-      console.log('Source audiences from datafile project:', sourceAudiences);
-      
-      // Step 2: Get target audiences from the selected project
-      const targetAudiencesResponse = await makeApiCall(false, `/audiences?project_id=${config.targetProjectId}`, getTargetApiToken(), {
-        method: 'GET'
-      });
-      
-      const targetAudiences = targetAudiencesResponse || [];
-      const targetAudienceMap: {[key: string]: any} = {};
-      targetAudiences.forEach((audience: any) => {
-        targetAudienceMap[audience.name] = audience;
-      });
-      
-      console.log('Target audiences from selected project:', targetAudiences);
-      
-      // Step 3: Compare and create missing audiences
-      const audiencesToCreate = Object.values(sourceAudienceMap).filter((sourceAudience: any) => {
-        return !targetAudienceMap[sourceAudience.name];
-      });
-      
-      const createdAudiences: any[] = [];
-      
-      for (const sourceAudience of audiencesToCreate) {
-        // Skip audiences that use special Optimizely system attributes like $opt_dummy_attribute
-        if (sourceAudience.conditions && sourceAudience.conditions.includes('$opt_dummy_attribute')) {
-          console.log(`Skipping audience '${sourceAudience.name}' - uses special Optimizely system attributes`);
-          continue;
-        }
-        
-        // Fix the conditions format to use match_type instead of match
-        let fixedConditions = sourceAudience.conditions;
-        if (typeof fixedConditions === 'string') {
-          // Parse the JSON string and fix the format
-          try {
-            const parsedConditions = JSON.parse(fixedConditions);
-            fixedConditions = JSON.stringify(parsedConditions).replace(/"match":/g, '"match_type":');
-          } catch (e) {
-            console.warn(`Could not parse conditions for audience ${sourceAudience.name}:`, e);
-            // If parsing fails, try to replace directly in the string
-            fixedConditions = fixedConditions.replace(/"match":/g, '"match_type":');
-          }
-        }
-        
-        // Prepare audience data according to API specification - DO NOT include id field
-        const audienceData = {
-          name: sourceAudience.name,
-          description: sourceAudience.description || sourceAudience.name,
-          conditions: fixedConditions,
-          project_id: config.targetProjectId,
-          segmentation: false // Set to false for Optimizely X audiences
-        };
-        
-        try {
-          const response = await makeApiCall(false, '/audiences', getTargetApiToken(), {
-            method: 'POST',
-            body: JSON.stringify(audienceData)
-          });
-          
-          createdAudiences.push({
-            id: response.id,
-            name: response.name,
-            message: 'Audience created successfully'
-          });
-          
-          // Add to target map for mapping creation
-          targetAudienceMap[sourceAudience.name] = response;
-          
-          console.log(`Created audience: ${sourceAudience.name} with ID: ${response.id}`);
-        } catch (error) {
-          console.error(`Failed to create audience ${sourceAudience.name}:`, error);
-          throw new Error(`Failed to create audience ${sourceAudience.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
-      }
-      
-      // Step 4: Create mapping from source IDs to target IDs
-      const newAudienceMappings: {[key: string]: string} = {};
-      Object.values(sourceAudienceMap).forEach((sourceAudience: any) => {
-        const targetAudience = targetAudienceMap[sourceAudience.name];
-        if (targetAudience) {
-          newAudienceMappings[sourceAudience.id] = targetAudience.id;
-        }
-      });
-      
-      // Update the audience mappings state
-      setAudienceMappings(newAudienceMappings);
-      
-      return { 
-        message: `Created ${createdAudiences.length} audiences`, 
-        audiences: createdAudiences, 
-        mappings: newAudienceMappings,
-        sourceAudiences,
-        targetAudiences
-      };
+      const sourceToken = getSourceApiToken();
+      const targetToken = getTargetApiToken();
+      const result = await createAudiences(sourceProjectId, config.targetProjectId, sourceToken, targetToken);
+      setAudienceMappings(result.mappings);
+      return result;
     } catch (error) {
       throw new Error(`Failed to create audiences: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
@@ -707,7 +510,7 @@ const FeatureFlagGenerator: React.FC = () => {
 
       try {
         // Step 1: Copy attributes
-        const attributesResult = await createAttributes();
+        const attributesResult = await handleCreateAttributes();
         setupSteps[0].status = 'completed';
         setupSteps[0].message = attributesResult.message;
         setGenerationSteps([...setupSteps]);
@@ -715,7 +518,7 @@ const FeatureFlagGenerator: React.FC = () => {
         // Step 2: Copy audiences
         setupSteps[1].status = 'in-progress';
         setGenerationSteps([...setupSteps]);
-        const audiencesResult = await createAudiences();
+        const audiencesResult = await handleCreateAudiences();
         audienceMappings = audiencesResult.mappings || {};
         setupSteps[1].status = 'completed';
         setupSteps[1].message = audiencesResult.message;
@@ -786,16 +589,18 @@ const FeatureFlagGenerator: React.FC = () => {
   // Load projects when API token is set
   useEffect(() => {
     if (getTargetApiToken() && projects.length === 0) {
-      fetchProjects();
+      handleFetchProjects();
     }
   }, [getTargetApiToken]);
+
+
 
   // Load environments when project is selected
   useEffect(() => {
     if (config.targetProjectId > 0) {
-      fetchEnvironments(config.targetProjectId);
+      handleFetchEnvironments(config.targetProjectId);
     }
-  }, [config.targetProjectId, fetchEnvironments]);
+      }, [config.targetProjectId, handleFetchEnvironments]);
 
   // Update selected environment when environment changes
   useEffect(() => {
@@ -840,7 +645,7 @@ const FeatureFlagGenerator: React.FC = () => {
         sourceFlagMap[flag.key] = flag;
       });
       
-      console.log('Source flags from source project:', sourceFlags);
+
       
       // Step 2: Get target flags from the target project
       const targetFlagsResponse = await makeApiCall(true, `/projects/${config.targetProjectId}/flags`, getTargetApiToken(), {
@@ -853,7 +658,7 @@ const FeatureFlagGenerator: React.FC = () => {
         targetFlagMap[flag.key] = flag;
       });
       
-      console.log('Target flags from target project:', targetFlags);
+
       
       // Step 3: Compare and create missing flags
       const flagsToCreate = Object.values(sourceFlagMap).filter((sourceFlag: any) => {
@@ -872,7 +677,7 @@ const FeatureFlagGenerator: React.FC = () => {
         };
         
         try {
-          console.log(`Creating flag: ${sourceFlag.key} with target API token`);
+
           const response = await makeApiCall(true, `/projects/${config.targetProjectId}/flags`, getTargetApiToken(), {
             method: 'POST',
             body: JSON.stringify(flagData)
@@ -887,7 +692,7 @@ const FeatureFlagGenerator: React.FC = () => {
           // Add to target map for mapping creation
           targetFlagMap[sourceFlag.key] = response;
           
-          console.log(`Created flag: ${sourceFlag.key} with ID: ${response.id}`);
+
         } catch (error) {
           console.error(`Failed to create flag ${sourceFlag.key}:`, error);
           throw new Error(`Failed to create flag ${sourceFlag.key}: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -948,7 +753,7 @@ const FeatureFlagGenerator: React.FC = () => {
         }
       }
       
-      console.log('Source variables from source project:', sourceVariableMap);
+
       
       // Step 2: Get target flags and their variables from the target project
       const targetProjectId = config.targetProjectId;
@@ -980,7 +785,7 @@ const FeatureFlagGenerator: React.FC = () => {
         }
       }
       
-      console.log('Target variables from target project:', targetVariableMap);
+
       
       // Step 3: Compare and create missing variables
       const variablesToCreate = Object.values(sourceVariableMap).filter((sourceVariable: any) => {
@@ -1019,7 +824,7 @@ const FeatureFlagGenerator: React.FC = () => {
             flagKey: sourceVariable.flagKey
           };
           
-          console.log(`Created variable: ${sourceVariable.key} for flag ${sourceVariable.flagKey} with ID: ${response.id}`);
+
         } catch (error) {
           console.error(`Failed to create variable ${sourceVariable.key} for flag ${sourceVariable.flagKey}:`, error);
           throw new Error(`Failed to create variable ${sourceVariable.key} for flag ${sourceVariable.flagKey}: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -1081,7 +886,7 @@ const FeatureFlagGenerator: React.FC = () => {
         }
       }
       
-      console.log('Source variations from source project:', sourceVariationMap);
+
       
       // Step 2: Get target flags and their variations from the target project
       const targetProjectId = config.targetProjectId;
@@ -1113,7 +918,7 @@ const FeatureFlagGenerator: React.FC = () => {
         }
       }
       
-      console.log('Target variations from target project:', targetVariationMap);
+
       
       // Step 3: Compare and create missing variations
       const variationsToCreate = Object.values(sourceVariationMap).filter((sourceVariation: any) => {
@@ -1166,7 +971,7 @@ const FeatureFlagGenerator: React.FC = () => {
             flagKey: sourceVariation.flagKey
           };
           
-          console.log(`Created variation: ${sourceVariation.key} for flag ${sourceVariation.flagKey} with ID: ${response.id}`);
+
         } catch (error) {
           console.error(`Failed to create variation ${sourceVariation.key} for flag ${sourceVariation.flagKey}:`, error);
           throw new Error(`Failed to create variation ${sourceVariation.key} for flag ${sourceVariation.flagKey}: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -1241,7 +1046,7 @@ const FeatureFlagGenerator: React.FC = () => {
         }
       }
       
-      console.log('Source rulesets from source project:', sourceRulesetMap);
+
       
       // Step 2: Get target flags and their rulesets from the target project
       const targetProjectId = config.targetProjectId;
@@ -1286,7 +1091,7 @@ const FeatureFlagGenerator: React.FC = () => {
         }
       }
       
-      console.log('Target rulesets from target project:', targetRulesetMap);
+
       
       // Step 3: Compare and create missing rulesets
       const rulesetsToCreate = Object.values(sourceRulesetMap).filter((sourceRuleset: any) => {
@@ -1354,7 +1159,7 @@ const FeatureFlagGenerator: React.FC = () => {
             });
           } catch (error) {
             // Ruleset doesn't exist yet, which is fine
-            console.log(`Ruleset doesn't exist yet for flag ${sourceRuleset.flagKey} in environment ${sourceRuleset.environmentKey}`);
+
           }
           
           // Convert the ruleset data to JSON patch format
@@ -1412,7 +1217,7 @@ const FeatureFlagGenerator: React.FC = () => {
             environmentKey: sourceRuleset.environmentKey
           };
           
-          console.log(`Created ruleset for flag ${sourceRuleset.flagKey} in environment ${sourceRuleset.environmentKey}`);
+
         } catch (error) {
           console.error(`Failed to create ruleset for flag ${sourceRuleset.flagKey} in environment ${sourceRuleset.environmentKey}:`, error);
           throw new Error(`Failed to create ruleset for flag ${sourceRuleset.flagKey} in environment ${sourceRuleset.environmentKey}: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -1430,8 +1235,18 @@ const FeatureFlagGenerator: React.FC = () => {
     }
   };
 
+
+
   return (
     <>
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
       <button
         onClick={() => setIsOpen(true)}
         className="theme-btn style-2"
@@ -1586,24 +1401,52 @@ const FeatureFlagGenerator: React.FC = () => {
               </div>
             )}
 
+            {/* Loading UI */}
+            {isProjectsLoading && (
+              <div style={{ 
+                marginBottom: '20px', 
+                padding: '15px', 
+                backgroundColor: '#2d2d5a', 
+                borderRadius: '5px',
+                border: '1px solid #007bff',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                <div style={{
+                  width: '20px',
+                  height: '20px',
+                  border: '2px solid #007bff',
+                  borderTop: '2px solid transparent',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite'
+                }}></div>
+                <span style={{ color: '#007bff' }}>{loadingMessage}</span>
+              </div>
+            )}
+
             {/* Dropdown Mode - Project Selection */}
             {config.copyMode === 'dropdown' && (
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
                   <div>
+                   
                     <label style={{ display: 'block', marginBottom: '5px' }}>
                       Source Project (Copy From):
                     </label>
                     <select
                       value={config.sourceProjectId}
                       onChange={(e) => setConfig(prev => ({ ...prev, sourceProjectId: parseInt(e.target.value) }))}
+                      disabled={isProjectsLoading}
                       style={{
                         width: '100%',
                         padding: '10px',
                         borderRadius: '5px',
                         border: '1px solid #333',
-                        backgroundColor: '#333',
-                        color: '#fff',
+                        backgroundColor: isProjectsLoading ? '#222' : '#333',
+                        color: isProjectsLoading ? '#666' : '#fff',
+                        opacity: isProjectsLoading ? 0.6 : 1,
+                        cursor: isProjectsLoading ? 'not-allowed' : 'pointer'
                       }}
                     >
                       <option value={0}>Select a source project</option>
@@ -1621,13 +1464,16 @@ const FeatureFlagGenerator: React.FC = () => {
                     <select
                       value={config.targetProjectId}
                       onChange={(e) => setConfig(prev => ({ ...prev, targetProjectId: parseInt(e.target.value) }))}
+                      disabled={isProjectsLoading}
                       style={{
                         width: '100%',
                         padding: '10px',
                         borderRadius: '5px',
                         border: '1px solid #333',
-                        backgroundColor: '#333',
-                        color: '#fff',
+                        backgroundColor: isProjectsLoading ? '#222' : '#333',
+                        color: isProjectsLoading ? '#666' : '#fff',
+                        opacity: isProjectsLoading ? 0.6 : 1,
+                        cursor: isProjectsLoading ? 'not-allowed' : 'pointer'
                       }}
                     >
                       <option value={0}>Select a target project</option>
@@ -1651,13 +1497,16 @@ const FeatureFlagGenerator: React.FC = () => {
                 <select
                   value={config.targetProjectId}
                   onChange={(e) => setConfig(prev => ({ ...prev, targetProjectId: parseInt(e.target.value) }))}
+                  disabled={isProjectsLoading}
                   style={{
                     width: '100%',
                     padding: '10px',
                     borderRadius: '5px',
                     border: '1px solid #333',
-                    backgroundColor: '#333',
-                    color: '#fff',
+                    backgroundColor: isProjectsLoading ? '#222' : '#333',
+                    color: isProjectsLoading ? '#666' : '#fff',
+                    opacity: isProjectsLoading ? 0.6 : 1,
+                    cursor: isProjectsLoading ? 'not-allowed' : 'pointer'
                   }}
                 >
                   <option value={0}>Select a target project</option>

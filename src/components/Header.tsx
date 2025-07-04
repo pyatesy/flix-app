@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SidePanel from './SidePanel';
 import { useThemeAssets } from '../hooks/useThemeAssets';
@@ -6,6 +6,16 @@ import { useThemeAssets } from '../hooks/useThemeAssets';
 const Header: React.FC = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const { logoUrl } = useThemeAssets();
+
+  // Check localStorage for initial state on mount
+  useEffect(() => {
+    const shouldOpenPanel = localStorage.getItem('sidePanelOpen') === 'true';
+    if (shouldOpenPanel) {
+      setIsPanelOpen(true);
+      // Clear the localStorage after reading it
+      localStorage.removeItem('sidePanelOpen');
+    }
+  }, []);
 
   const togglePanel = () => {
     setIsPanelOpen(!isPanelOpen);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SidePanel from './SidePanel';
 import { useDecision } from '@optimizely/react-sdk';
 import { useUserId } from '../contexts/UserContext';
@@ -13,6 +13,16 @@ const RegionOverlay: React.FC = () => {
   const { logoUrl, breadcrumbBackgroundUrl } = useThemeAssets();
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  // Check localStorage for initial state on mount
+  useEffect(() => {
+    const shouldOpenPanel = localStorage.getItem('sidePanelOpen') === 'true';
+    if (shouldOpenPanel) {
+      setIsPanelOpen(true);
+      // Clear the localStorage after reading it
+      localStorage.removeItem('sidePanelOpen');
+    }
+  }, []);
 
   const togglePanel = () => {
     setIsPanelOpen(!isPanelOpen);

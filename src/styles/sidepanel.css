@@ -21,8 +21,27 @@ border-bottom: 1px solid #272525;
     height: 100vh;
     background-color: #1a1a1a;
     z-index: 1000;
-    transition: right 0.3s ease-in-out;
+    transition: right 0.3s ease-in-out, width 0.3s ease-in-out;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .side-panel.width-small {
+    width: 500px !important;
+  }
+
+  .side-panel.width-medium {
+    width: 30% !important;
+  }
+
+  .side-panel.width-large {
+    width: 50% !important;
+  }
+
+  .side-panel-footer {
+    background: linear-gradient(to top, rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.8));
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #333;
+    padding: 15px 0;
   }
   
   .side-panel.open {
@@ -33,6 +52,7 @@ border-bottom: 1px solid #272525;
     padding: 2rem;
     height: 100%;
     overflow-y: auto;
+    padding-bottom: 80px; /* Add space for footer */
   }
   
   .close-button {

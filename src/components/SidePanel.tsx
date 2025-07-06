@@ -3,6 +3,7 @@ import { useDecision } from '@optimizely/react-sdk';
 import { useUserId } from '../contexts/UserContext';
 import { generateUserId } from '../utils/userId';
 import FeatureFlagGenerator from './FeatureFlagGenerator';
+import optimizelyClient from '../config/optimizely';
 
 interface SidePanelProps {
   isOpen: boolean;
@@ -16,11 +17,6 @@ interface Country {
 
 const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   const { userId } = useUserId();
-  const [dragonDecision] = useDecision('dragon-recommendation-2');
-  const [subscriptionDecision] = useDecision('subscription_tiers');
-  const [notAvailableDecision] = useDecision('not_available');
-  const [themeCustomizationDecision] = useDecision('theme_customization');
-  const [offerBannerDecision] = useDecision('offer_banner');
   const [country, setCountry] = useState(localStorage.getItem('user_country') || '');
   const [device, setDevice] = useState(localStorage.getItem('device') || 'browser');
   const [tempCountry, setTempCountry] = useState(country);
@@ -46,6 +42,21 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [expandedJsonVariables, setExpandedJsonVariables] = useState<{[key: string]: boolean}>({});
   const [panelWidth, setPanelWidth] = useState<'small' | 'medium' | 'large'>('small');
+
+  // Function to get all feature flags and their decisions
+  const getAllFeatureFlags = () => {
+    try {
+      // Get all decisions using decideAll
+      const allDecisions = optimizelyClient.decideAll();
+      return Object.entries(allDecisions).map(([flagKey, decision]) => ({
+        key: flagKey,
+        decision: decision
+      }));
+    } catch (error) {
+      console.error('Error getting feature flags from decideAll:', error);
+    }
+    return [];
+  };
 
   // Comprehensive country list with ISO 3166-1 alpha-2 codes
   const countries: Country[] = [
@@ -373,12 +384,16 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   };
 
   const renderFeatureFlagInfo = (decision: any, flagKey: string) => {
-    if (!decision.enabled) return null;
+    const isEnabled = decision.enabled;
+    const variationKey = decision.variationKey || 'control';
+    const borderColor = isEnabled ? '#28a745' : '#dc3545'; // green for enabled, red for disabled
+    const textColor = isEnabled ? '#007bff' : '#6c757d'; // blue for enabled, gray for disabled
+    const iconClass = isEnabled ? 'fas fa-toggle-on' : 'fas fa-toggle-off';
     
     return (
       <div key={flagKey} className="feature-flag-info mb-4">
-        <h4 className="text-primary mb-3" style={{ color: '#007bff', fontWeight: 'bold' }}>
-          <i className="fas fa-toggle-on me-2"></i>
+        <h4 className="text-primary mb-3" style={{ color: textColor, fontWeight: 'bold' }}>
+          <i className={`${iconClass} me-2`}></i>
           {flagKey}
         </h4>
         
@@ -390,8 +405,14 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
                 <td style={{ width: '120px', fontWeight: 'bold', color: '#6c757d' }}>Variation:</td>
                 <td>
                   <div className="d-flex align-items-center">
-                    <code className="text-success bg-dark border border-success p-2 rounded me-2">
-                      {decision.variationKey || 'control'}
+                    <code 
+                      className={`bg-dark border p-2 rounded me-2`}
+                      style={{ 
+                        color: isEnabled ? '#28a745' : '#dc3545',
+                        borderColor: borderColor
+                      }}
+                    >
+                      {variationKey}
                     </code>
                     <button
                       onClick={handleRegenerateUserId}
@@ -405,8 +426,8 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
                 </td>
               </tr>
               
-              {/* Variables Rows */}
-              {decision.variables && Object.entries(decision.variables).map(([key, value]) => {
+              {/* Variables Rows - Only show if flag is enabled */}
+              {isEnabled && decision.variables && Object.entries(decision.variables).map(([key, value]) => {
                 const isJsonType = typeof value === 'object' && value !== null;
                 const variableKey = `${flagKey}_${key}`;
                 const isExpanded = expandedJsonVariables[variableKey];
@@ -417,48 +438,48 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
                       {key}:
                     </td>
                     <td>
-                                              <div className="d-flex align-items-center justify-content-between">
-                          <div className="flex-grow-1">
-                            {isJsonType && !isExpanded ? (
-                              <div 
-                                className="d-flex align-items-center cursor-pointer"
-                                onClick={() => setExpandedJsonVariables(prev => ({
-                                  ...prev,
-                                  [variableKey]: true
-                                }))}
-                                style={{ 
-                                  cursor: 'pointer',
-                                  padding: '8px 12px',
-                                  backgroundColor: '#2a2a2a',
-                                  border: '1px solid #666',
-                                  borderRadius: '4px',
-                                  transition: 'background-color 0.2s'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3a3a'}
-                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2a2a2a'}
-                              >
-                                <span className="text-muted me-2">[JSON Object]</span>
-                                <i className="fas fa-chevron-down text-primary"></i>
-                              </div>
-                            ) : (
-                              <div 
-                                className="value-container bg-dark border border-secondary p-2 rounded cursor-pointer"
-                                onClick={() => setExpandedJsonVariables(prev => ({
-                                  ...prev,
-                                  [variableKey]: !isExpanded
-                                }))}
-                                style={{ 
-                                  cursor: 'pointer',
-                                  transition: 'background-color 0.2s'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2a2a2a'}
-                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#212529'}
-                              >
-                                {renderJsonValue(value)}
-                              </div>
-                            )}
-                          </div>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div className="flex-grow-1">
+                          {isJsonType && !isExpanded ? (
+                            <div 
+                              className="d-flex align-items-center cursor-pointer"
+                              onClick={() => setExpandedJsonVariables(prev => ({
+                                ...prev,
+                                [variableKey]: true
+                              }))}
+                              style={{ 
+                                cursor: 'pointer',
+                                padding: '8px 12px',
+                                backgroundColor: '#2a2a2a',
+                                border: '1px solid #666',
+                                borderRadius: '4px',
+                                transition: 'background-color 0.2s'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3a3a3a'}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2a2a2a'}
+                            >
+                              <span className="text-muted me-2">[JSON Object]</span>
+                              <i className="fas fa-chevron-down text-primary"></i>
+                            </div>
+                          ) : (
+                            <div 
+                              className="value-container bg-dark border border-secondary p-2 rounded cursor-pointer"
+                              onClick={() => setExpandedJsonVariables(prev => ({
+                                ...prev,
+                                [variableKey]: !isExpanded
+                              }))}
+                              style={{ 
+                                cursor: 'pointer',
+                                transition: 'background-color 0.2s'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2a2a2a'}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#212529'}
+                            >
+                              {renderJsonValue(value)}
+                            </div>
+                          )}
                         </div>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -695,22 +716,26 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
     </div>
   );
 
-  const renderFlagsTab = () => (
-    <div className="flags-wrapper bg-dark p-4 rounded">
-      <h3><i className="fas fa-toggle-on"/> Active Feature Flags</h3>
-      <p className="text-light mb-3">
-        Current feature flag decisions and their variations for this user.
-      </p>
-      
-      <div className="mt-4">
-        {renderFeatureFlagInfo(dragonDecision, 'dragon-recommendation-2')}
-        {renderFeatureFlagInfo(notAvailableDecision, 'not_available')}
-        {renderFeatureFlagInfo(offerBannerDecision, 'offer_banner')}
-        {renderFeatureFlagInfo(subscriptionDecision, 'subscription_tiers')}
-        {renderFeatureFlagInfo(themeCustomizationDecision, 'theme_customization')}
+  const renderFlagsTab = () => {
+    const allFeatureFlags = getAllFeatureFlags();
+    
+    return (
+      <div className="flags-wrapper bg-dark p-4 rounded">
+        <h3><i className="fas fa-toggle-on"/> Feature Flags</h3>
+        <p className="text-light mb-3">
+          Current feature flag decisions and their variations for this user.
+        </p>
+        
+        <div className="mt-4">
+          {allFeatureFlags.map((flag: any) => (
+            <div key={flag.key}>
+              {renderFeatureFlagInfo(flag.decision, flag.key)}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className={`side-panel ${isOpen ? 'open' : ''} width-${panelWidth}`}>

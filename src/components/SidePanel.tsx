@@ -57,7 +57,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
       const allDecisions = optimizelyClient.decideAll();
       
       // Create a map of all flags with their decisions
-      return Object.entries(config.featuresMap).map(([flagKey, feature]) => {
+      return Object.entries(config.featuresMap).sort((a, b) => a[0].localeCompare(b[0])).map(([flagKey, feature]) => {
         const decision = allDecisions[flagKey];
         return {
           key: flagKey,

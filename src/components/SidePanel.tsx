@@ -24,6 +24,8 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   const [tempCustomAttributes, setTempCustomAttributes] = useState(customAttributes);
   const [sdkKey, setSdkKey] = useState(localStorage.getItem('optimizely_sdk_key') || 'VcBzHwxVF7kba7WCvzSfW');
   const [tempSdkKey, setTempSdkKey] = useState(sdkKey);
+  const [webSnippetLocation, setWebSnippetLocation] = useState(localStorage.getItem('optimizely_web_snippet_location') || '');
+  const [tempWebSnippetLocation, setTempWebSnippetLocation] = useState(webSnippetLocation);
   const [activeTab, setActiveTab] = useState<'demo' | 'admin' | 'flags'>('demo');
 
   // Check localStorage for initial state on mount
@@ -355,6 +357,34 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
       setSdkKey(tempSdkKey);
       localStorage.setItem('optimizely_sdk_key', tempSdkKey);
       // Reload to apply new SDK key
+      window.location.reload();
+    }
+  };
+
+  const handleWebSnippetLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempWebSnippetLocation(e.target.value);
+  };
+
+  const handleWebSnippetLocationSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Sanitize the input to extract only the src attribute
+    let sanitizedLocation = tempWebSnippetLocation.trim();
+    
+    // Check if it's a full script tag
+    if (sanitizedLocation.includes('<script') && sanitizedLocation.includes('src=')) {
+      // Extract src attribute using regex
+      const srcMatch = sanitizedLocation.match(/src=["']([^"']+)["']/);
+      if (srcMatch) {
+        sanitizedLocation = srcMatch[1];
+      }
+    }
+    
+    if (sanitizedLocation !== webSnippetLocation) {
+      setWebSnippetLocation(sanitizedLocation);
+      setTempWebSnippetLocation(sanitizedLocation);
+      localStorage.setItem('optimizely_web_snippet_location', sanitizedLocation);
+      // Reload to apply new web snippet location
       window.location.reload();
     }
   };
@@ -720,6 +750,29 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
         </form>
         <div className="mt-2">
           <small className="text-light">Current: <code className="text-light bg-dark border border-secondary px-2 py-1 rounded">{sdkKey}</code></small>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <h4 className="text-white mb-3"><i className="fas fa-code"/> Optimizely Web Snippet Location</h4>
+        <form onSubmit={handleWebSnippetLocationSubmit} className="d-flex align-items-center">
+          <input
+            type="text"
+            value={tempWebSnippetLocation}
+            onChange={handleWebSnippetLocationChange}
+            placeholder="Enter web snippet location (e.g., /assets/js/optimizely.js)"
+            className="form-control bg-dark text-light border-secondary"
+            style={{ fontFamily: 'Courier New', fontSize: '14px' }}
+          />
+          <button
+            type="submit"
+            className="btn btn-secondary ms-2"
+          >
+            <i className="fas fa-check"></i>
+          </button>
+        </form>
+        <div className="mt-2">
+          <small className="text-light">Current: <code className="text-light bg-dark border border-secondary px-2 py-1 rounded">{webSnippetLocation || 'Not set'}</code></small>
         </div>
       </div>
 

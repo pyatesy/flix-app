@@ -9,7 +9,21 @@
       name="description"
       content="Flix - Your Ultimate Streaming Platform"
     />
-    <script src="https://cdn.optimizely.com/js/5952350188208128.js"></script>
+    <script>
+      // Get Optimizely web snippet location from localStorage
+      const optimizelyWebSnippetLocation = localStorage.getItem('optimizely_web_snippet_location');
+      if (optimizelyWebSnippetLocation) {
+        // Create and load the script from the custom location
+        const script = document.createElement('script');
+        script.src = optimizelyWebSnippetLocation;
+        document.head.appendChild(script);
+      } else {
+        // Fallback to default Optimizely script
+        const script = document.createElement('script');
+        script.src = 'https://cdn.optimizely.com/js/5952350188208128.js';
+        document.head.appendChild(script);
+      }
+    </script>
     <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/all.min.css">
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--

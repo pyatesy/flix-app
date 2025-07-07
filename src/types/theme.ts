@@ -26,6 +26,11 @@ export interface ThemeConfig {
   shadows: {
     boxShadow: string;
   };
+  overrides?: {
+    genreExcludeRecentlyViewed?: string[]; // Optional array of genre names to exclude
+    genreExcludeRecommends?: string[]; // Optional array of genre names to exclude
+    genreExcludeHeroTrending?: string[]; // Optional array of genre names to exclude
+  };
 }
 
 export interface OptimizelyThemeData {

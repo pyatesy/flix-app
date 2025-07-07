@@ -46,14 +46,31 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   // Function to get all feature flags and their decisions
   const getAllFeatureFlags = () => {
     try {
-      // Get all decisions using decideAll
+      // Get the OptimizelyConfig object
+      const config = optimizelyClient.getOptimizelyConfig();
+      if (!config || !config.featuresMap) {
+        console.error('No OptimizelyConfig or featuresMap found');
+        return [];
+      }
+
+      // Get decisions for enabled flags
       const allDecisions = optimizelyClient.decideAll();
-      return Object.entries(allDecisions).map(([flagKey, decision]) => ({
-        key: flagKey,
-        decision: decision
-      }));
+      
+      // Create a map of all flags with their decisions
+      return Object.entries(config.featuresMap).map(([flagKey, feature]) => {
+        const decision = allDecisions[flagKey];
+        return {
+          key: flagKey,
+          feature: feature,
+          decision: decision || {
+            enabled: false,
+            variationKey: 'control',
+            variables: null
+          }
+        };
+      });
     } catch (error) {
-      console.error('Error getting feature flags from decideAll:', error);
+      console.error('Error getting feature flags from OptimizelyConfig:', error);
     }
     return [];
   };

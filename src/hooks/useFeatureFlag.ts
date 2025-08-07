@@ -1,11 +1,11 @@
 import { useDecision } from '@optimizely/react-sdk';
-import optimizelyClient from '../config/optimizely';
 
 export const useFeatureFlag = (featureKey: string) => {
   const [decision] = useDecision(featureKey);
-
+  
   return {
-    isEnabled: decision.enabled,
-    variables: decision.variables
+    isEnabled: decision?.enabled || false,
+    variables: decision?.variables || null,
+    variationKey: decision?.variationKey || null
   };
 }; 

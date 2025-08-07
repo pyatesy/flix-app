@@ -1,0 +1,116 @@
+/* Product Filters Styles */
+.product-filters {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.product-filters .card {
+  border: none;
+  box-shadow: none;
+}
+
+.product-filters .card-header {
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  border-radius: 8px 8px 0 0 !important;
+}
+
+.product-filters .card-body {
+  padding: 1.5rem;
+}
+
+.max-height-200 {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+/* Filter sections */
+.product-filters h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sort buttons */
+.product-filters .btn-group-vertical .btn {
+  text-align: left;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0;
+  margin-bottom: 2px;
+}
+
+.product-filters .btn-group-vertical .btn:first-child {
+  border-radius: 4px 4px 0 0;
+}
+
+.product-filters .btn-group-vertical .btn:last-child {
+  border-radius: 0 0 4px 4px;
+  margin-bottom: 0;
+}
+
+/* Price range inputs */
+.product-filters .form-control-sm {
+  font-size: 0.85rem;
+  padding: 0.375rem 0.5rem;
+}
+
+/* Checkboxes */
+.product-filters .form-check {
+  margin-bottom: 0.5rem;
+}
+
+.product-filters .form-check-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.product-filters .form-check-input:checked + .form-check-label {
+  color: #495057;
+  font-weight: 500;
+}
+
+/* Clear filters button */
+.product-filters .btn-outline-secondary {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-filters {
+    margin-bottom: 2rem;
+  }
+  
+  .product-filters .sticky-top {
+    position: static !important;
+  }
+}
+
+/* Scrollbar styling for filter lists */
+.max-height-200::-webkit-scrollbar {
+  width: 4px;
+}
+
+.max-height-200::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.max-height-200::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.max-height-200::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+} 

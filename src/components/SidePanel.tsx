@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useDecision } from '@optimizely/react-sdk';
 import { useUserId } from '../contexts/UserContext';
 import { generateUserId } from '../utils/userId';
 import FeatureFlagGenerator from './FeatureFlagGenerator';
-import optimizelyClient from '../config/optimizely';
+import { TemplateSdkManager } from '../utils/templateSdkManager';
+import { TemplateOptimizelyManager } from '../utils/templateOptimizelyManager';
+import { useTemplate } from '../contexts/TemplateContext';
 
 interface SidePanelProps {
   isOpen: boolean;
@@ -17,13 +18,23 @@ interface Country {
 
 const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   const { userId } = useUserId();
+  const { activeTemplate, setTemplate } = useTemplate();
   const [country, setCountry] = useState(localStorage.getItem('user_country') || '');
   const [device, setDevice] = useState(localStorage.getItem('device') || 'browser');
   const [tempCountry, setTempCountry] = useState(country);
   const [customAttributes, setCustomAttributes] = useState(localStorage.getItem('custom_attributes') || '');
   const [tempCustomAttributes, setTempCustomAttributes] = useState(customAttributes);
+  
+  // Template-specific SDK key management
+  const [templateSdkKeys, setTemplateSdkKeys] = useState(TemplateSdkManager.getTemplateSdkKeys());
+  const [selectedTemplateForFlags, setSelectedTemplateForFlags] = useState(activeTemplate);
+  const [tempTemplateSdkKey, setTempTemplateSdkKey] = useState('');
+  const [editingTemplate, setEditingTemplate] = useState<string | null>(null);
+  
+  // Legacy SDK key management (for backward compatibility)
   const [sdkKey, setSdkKey] = useState(localStorage.getItem('optimizely_sdk_key') || 'VcBzHwxVF7kba7WCvzSfW');
   const [tempSdkKey, setTempSdkKey] = useState(sdkKey);
+  
   const [webSnippetLocation, setWebSnippetLocation] = useState(localStorage.getItem('optimizely_web_snippet_location') || '');
   const [tempWebSnippetLocation, setTempWebSnippetLocation] = useState(webSnippetLocation);
   const [activeTab, setActiveTab] = useState<'demo' | 'admin' | 'flags'>('demo');
@@ -38,6 +49,11 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
     }
   }, []);
   
+  // Update template SDK keys when they change
+  useEffect(() => {
+    setTemplateSdkKeys(TemplateSdkManager.getTemplateSdkKeys());
+  }, [activeTemplate]);
+  
   // Country dropdown states
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [countrySearchTerm, setCountrySearchTerm] = useState('');
@@ -45,18 +61,28 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   const [expandedJsonVariables, setExpandedJsonVariables] = useState<{[key: string]: boolean}>({});
   const [panelWidth, setPanelWidth] = useState<'small' | 'medium' | 'large'>('small');
 
-  // Function to get all feature flags and their decisions
-  const getAllFeatureFlags = () => {
+  // Function to get all feature flags and their decisions for a specific template
+  const getAllFeatureFlags = (templateId?: string) => {
     try {
-      // Get the OptimizelyConfig object
-      const config = optimizelyClient.getOptimizelyConfig();
+      const targetTemplate = templateId || selectedTemplateForFlags;
+      
+      // Get template-specific client
+      const templateClient = TemplateOptimizelyManager.getTemplateClient(targetTemplate);
+      
+      // Check if client is ready
+      if (!templateClient.isReady) {
+        console.warn(`Template client for ${targetTemplate} is not ready yet`);
+        return [];
+      }
+      
+      const config = templateClient.client.getOptimizelyConfig();
       if (!config || !config.featuresMap) {
-        console.error('No OptimizelyConfig or featuresMap found');
+        console.error('No OptimizelyConfig or featuresMap found for template:', targetTemplate);
         return [];
       }
 
       // Get decisions for enabled flags
-      const allDecisions = optimizelyClient.decideAll();
+      const allDecisions = templateClient.client.decideAll();
       
       // Create a map of all flags with their decisions
       return Object.entries(config.featuresMap).sort((a, b) => a[0].localeCompare(b[0])).map(([flagKey, feature]) => {
@@ -68,13 +94,44 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
             enabled: false,
             variationKey: 'control',
             variables: null
-          }
+          },
+          template: targetTemplate
         };
       });
     } catch (error) {
-      console.error('Error getting feature flags from OptimizelyConfig:', error);
+      console.error('Error getting feature flags from OptimizelyConfig for template:', templateId, error);
     }
     return [];
+  };
+
+  // Handle template SDK key change
+  const handleTemplateSdkKeyChange = (templateId: string, newSdkKey: string) => {
+    setTemplateSdkKeys(prev => ({
+      ...prev,
+      [templateId]: newSdkKey
+    }));
+  };
+
+  // Handle template SDK key save
+  const handleTemplateSdkKeySave = (templateId: string) => {
+    const newSdkKey = templateSdkKeys[templateId as keyof typeof templateSdkKeys];
+    if (newSdkKey && TemplateSdkManager.isValidSdkKey(newSdkKey)) {
+      TemplateSdkManager.setTemplateSdkKey(templateId, newSdkKey);
+      setEditingTemplate(null);
+      console.log(`Saved SDK key for ${templateId}: ${newSdkKey.substring(0, 10)}...`);
+    }
+  };
+
+  // Handle template switching for flags view
+  const handleTemplateSwitch = (templateId: string) => {
+    setSelectedTemplateForFlags(templateId);
+    // Note: In Phase 3, this will switch the actual Optimizely client
+  };
+
+  // Handle active template switching
+  const handleActiveTemplateSwitch = (templateId: string) => {
+    setTemplate(templateId);
+    TemplateSdkManager.setActiveTemplate(templateId);
   };
 
   // Comprehensive country list with ISO 3166-1 alpha-2 codes
@@ -547,7 +604,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
         <br/>
         <button 
           onClick={handleRegenerateUserId}
-          className="theme-btn block-btn mt-3"
+          className="btn block-btn mt-3"
         >
           <i className="fas fa-sync"/> New ID
         </button>
@@ -730,8 +787,106 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
     <div className="admin-wrapper bg-dark p-4 rounded">
       <h3><i className="fas fa-cog"/> Admin Tools</h3>
       
+      {/* Template Management Section */}
       <div className="mt-4">
-        <h4 className="text-white mb-3"><i className="fas fa-globe"/> Optimizely SDK Key</h4>
+        <h4 className="text-white mb-3"><i className="fas fa-layer-group"/> Template Management</h4>
+        
+        {/* Active Template Selector */}
+        <div className="mb-3">
+          <label className="text-light mb-2 d-block">Active Template:</label>
+          <div className="btn-group" role="group">
+            {['streaming', 'retail', 'b2b'].map((templateId) => (
+              <button
+                key={templateId}
+                type="button"
+                className={`btn ${activeTemplate === templateId ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => handleActiveTemplateSwitch(templateId)}
+                style={{ textTransform: 'capitalize' }}
+              >
+                {templateId}
+              </button>
+            ))}
+          </div>
+          <small className="text-light mt-1 d-block">
+            Current: <code className="text-light bg-dark border border-secondary px-2 py-1 rounded">{activeTemplate}</code>
+          </small>
+        </div>
+
+        {/* Template SDK Keys */}
+        <div className="mb-3">
+          <label className="text-light mb-2 d-block">Template SDK Keys:</label>
+          {(['streaming', 'retail', 'b2b'] as const).map((templateId) => {
+            const clientStatus = TemplateOptimizelyManager.getTemplateClientStatus(templateId);
+            return (
+              <div key={templateId} className="mb-2">
+                <div className="d-flex align-items-center">
+                  <span className="text-light me-2" style={{ minWidth: '80px', textTransform: 'capitalize' }}>
+                    {templateId}:
+                  </span>
+                  {editingTemplate === templateId ? (
+                    <>
+                      <input
+                        type="text"
+                        value={templateSdkKeys[templateId]}
+                        onChange={(e) => handleTemplateSdkKeyChange(templateId, e.target.value)}
+                        placeholder="Enter SDK Key"
+                        className="form-control bg-dark text-light border-secondary me-2"
+                        style={{ fontFamily: 'Courier New', fontSize: '12px' }}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-success btn-sm me-1"
+                        onClick={() => handleTemplateSdkKeySave(templateId)}
+                      >
+                        <i className="fas fa-check"></i>
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => setEditingTemplate(null)}
+                      >
+                        <i className="fas fa-times"></i>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <code className="text-light bg-dark border border-secondary px-2 py-1 rounded me-2" style={{ fontSize: '12px' }}>
+                        {templateSdkKeys[templateId] ? 
+                          `${templateSdkKeys[templateId].substring(0, 10)}...` : 
+                          'Not set'
+                        }
+                      </code>
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary btn-sm"
+                        onClick={() => setEditingTemplate(templateId)}
+                      >
+                        <i className="fas fa-edit"></i>
+                      </button>
+                    </>
+                  )}
+                </div>
+                {/* Client Status Indicator */}
+                <div className="ms-4 mt-1">
+                  <small className={`${clientStatus.exists ? 'text-success' : 'text-muted'}`}>
+                    <i className={`fas fa-circle ${clientStatus.exists ? 'text-success' : 'text-muted'}`} style={{ fontSize: '8px' }}></i>
+                    {clientStatus.exists ? 'Client Ready' : 'No Client'}
+                    {clientStatus.exists && !clientStatus.isReady && (
+                      <span className="text-warning ms-1">
+                        <i className="fas fa-clock"></i> Loading...
+                      </span>
+                    )}
+                  </small>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Legacy SDK Key Management (for backward compatibility) */}
+      <div className="mt-4">
+        <h4 className="text-white mb-3"><i className="fas fa-globe"/> Legacy SDK Key (Backward Compatibility)</h4>
         <form onSubmit={handleSdkKeySubmit} className="d-flex align-items-center">
           <input
             type="text"
@@ -792,8 +947,40 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
     return (
       <div className="flags-wrapper bg-dark p-4 rounded">
         <h3><i className="fas fa-toggle-on"/> Feature Flags</h3>
+        
+        {/* Template Selector for Flags */}
+        <div className="mb-3">
+          <label className="text-light mb-2 d-block">View Flags for Template:</label>
+          <div className="btn-group" role="group">
+            {['streaming', 'retail', 'b2b'].map((templateId) => (
+              <button
+                key={templateId}
+                type="button"
+                className={`btn ${selectedTemplateForFlags === templateId ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => handleTemplateSwitch(templateId)}
+                style={{ textTransform: 'capitalize' }}
+              >
+                {templateId}
+              </button>
+            ))}
+          </div>
+          <small className="text-light mt-1 d-block">
+            Viewing flags for: <code className="text-light bg-dark border border-secondary px-2 py-1 rounded">{selectedTemplateForFlags}</code>
+            {selectedTemplateForFlags !== activeTemplate && (
+              <span className="text-warning ms-2">
+                <i className="fas fa-exclamation-triangle"></i> Different from active template
+              </span>
+            )}
+          </small>
+        </div>
+        
         <p className="text-light mb-3">
-          Current feature flag decisions and their variations for this user.
+          Feature flag decisions and their variations for this user in the selected template.
+          {selectedTemplateForFlags !== activeTemplate && (
+            <span className="text-warning d-block mt-1">
+              <i className="fas fa-info-circle"></i> Note: You're viewing flags from a different template than the active one.
+            </span>
+          )}
         </p>
         
         <div className="mt-4">

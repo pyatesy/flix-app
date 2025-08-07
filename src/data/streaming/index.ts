@@ -1,0 +1,1 @@
+export { movieDatabase, genres, actors } from './movies'; 

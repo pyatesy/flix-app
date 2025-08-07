@@ -1,0 +1,84 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import SidePanel from '../SidePanel';
+import { useThemeAssets } from '../../hooks/useThemeAssets';
+import '../../styles/streaming/streaming.css';
+
+const StreamingHeader: React.FC = () => {
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const { logoUrl } = useThemeAssets();
+
+  // Check localStorage for initial state on mount
+  useEffect(() => {
+    const shouldOpenPanel = localStorage.getItem('sidePanelOpen') === 'true';
+    if (shouldOpenPanel) {
+      setIsPanelOpen(true);
+      // Clear the localStorage after reading it
+      localStorage.removeItem('sidePanelOpen');
+    }
+  }, []);
+
+  const togglePanel = () => {
+    setIsPanelOpen(!isPanelOpen);
+  };
+
+  return (
+    <>
+      <header className="header-1">
+        <div className="container-fluid">
+          <div className="mega-menu-wrapper">
+            <div className="header-main style-2">
+              <div className="header-left">
+                <div className="logo">
+                  <Link to="/" className="header-logo">
+                    <img src={logoUrl} alt="Flix Streaming" width={100}/>
+                  </Link>
+                </div>
+              </div>
+              <div className="mean__menu-wrapper">
+                <div className="main-menu">
+                  <nav id="mobile-menu">
+                    <ul>
+                      <li className="has-dropdown active">
+                        <Link to="/">Home</Link>
+                      </li>
+                      <li>
+                        <Link to="/movies">Movies</Link>
+                      </li>
+                      <li>
+                        <Link to="/pricing">Subscriptions</Link>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+             <div className="header-right d-flex justify-content-end align-items-center">
+                <div className="tp-header-search d-none d-md-flex">
+                  <button className="d-flex align-items-center tp-search-toggle">
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                </div>
+                <div className="header-button">
+                  <Link to="/pricing" className="theme-btn">
+                    subscribe <div className="fas fa-gem"></div>
+                  </Link>
+                  <Link to="/login" className="theme-btn style-2">
+                    sign in <div className="fas fa-user"></div>
+                  </Link>
+                </div>
+                <div className="header__hamburger">
+                  <div className="sidebar__toggle" onClick={togglePanel}>
+                    <i className="fas fa-bars"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <SidePanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
+    </>
+  );
+};
+
+export default StreamingHeader; 

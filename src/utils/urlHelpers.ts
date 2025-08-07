@@ -1,4 +1,4 @@
-import { Movie } from '../types/movie';
+import { Movie } from '../types/streaming/movie';
 
 /**
  * Converts a movie title into a URL-friendly slug

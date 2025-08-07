@@ -1,0 +1,33 @@
+/* Shared CSS Variables for Multi-Template System */
+
+/* CSS Variables are now set dynamically by ThemeProvider based on template configuration */
+/* This file serves as a fallback and documentation of available variables */
+
+/* 
+Available CSS Variables (set dynamically):
+
+Colors:
+--theme, --theme2, --theme3, --theme4
+--body, --black, --white, --header, --text
+--border, --border2, --bg, --bg2
+--primary-color, --primary-color-hover
+--secondary-color, --success-color, --danger-color
+--warning-color, --info-color, --light-color, --dark-color
+
+Typography:
+--font-family, --font-family-base, --font-size-base, --line-height-base
+--font-size-h1, --font-size-h2, --font-size-h3, --font-size-h4, --font-size-h5, --font-size-h6
+--font-size-up-1, --font-size-up-2, --font-size-up-3, --font-size-up-4, --font-size-up-5, --font-size-up-6
+
+Spacing:
+--spacing-xs, --spacing-sm, --spacing-md, --spacing-lg, --spacing-xl
+
+Border Radius:
+--border-radius, --border-radius-lg, --border-radius-sm
+
+Shadows:
+--box-shadow, --box-shadow-lg, --box-shadow-bootstrap
+
+Assets:
+--logo-url, --breadcrumb-bg-url
+*/

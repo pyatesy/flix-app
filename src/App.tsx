@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { OptimizelyProvider } from '@optimizely/react-sdk';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { UserProvider, useUserId } from './contexts/UserContext';
-import optimizelyClient from './config/optimizely';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Movie from './pages/Movie';
-import MovieDetails from './pages/MovieDetails';
-import Pricing from './pages/Pricing';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
-import LoadingOverlay from './components/LoadingOverlay';
-import RegionOverlay from './components/RegionOverlay';
-import ThemeProvider from './components/ThemeProvider';
+import { TemplateProvider } from './contexts/TemplateContext';
+import DynamicOptimizelyProvider from './components/DynamicOptimizelyProvider';
+import TemplateHeader from './components/TemplateHeader';
+import TemplateFooter from './components/TemplateFooter';
+import TemplateRouter from './components/TemplateRouter';
+import TemplateSwitcher from './components/TemplateSwitcher';
+import { LoadingOverlay, RegionOverlay, ThemeProvider, TVScreenWrapper, MobileScreenWrapper } from './components/shared';
 import OfferBanner from './components/OfferBanner';
-import TVScreenWrapper from './components/TVScreenWrapper';
-import MobileScreenWrapper from './components/MobileScreenWrapper';
+import './styles/filters.css';
 
 const AppContent: React.FC = () => {
   const { userId } = useUserId();
@@ -46,9 +39,9 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        await optimizelyClient.onReady();
+        // Note: We don't need to wait for optimizelyClient.onReady() here anymore
+        // since the DynamicOptimizelyProvider handles client creation
         setIsOptimizelyReady(true);
-        // Additional initialization...
         setIsLoading(false);
       } catch (error) {
         console.error('Initialization error:', error);
@@ -66,20 +59,12 @@ const AppContent: React.FC = () => {
   const appContent = (
     <Router>
       <div className="body-bg">
-        <Header />
+        <TemplateHeader />
         <OfferBanner />
         <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/movie" element={<Movie />} />
-            <Route path="/movies" element={<Movie />} />
-            <Route path="/movie/:slug" element={<MovieDetails />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <TemplateRouter />
         </main>
-        <Footer />
+        <TemplateFooter />
         <div id="back-top">
           <i className="fa-solid fa-chevron-up"></i>
         </div>
@@ -122,23 +107,24 @@ const App: React.FC = () => {
 
   return (
     <UserProvider>
-      <OptimizelyProvider
-        optimizely={optimizelyClient}
-        user={{
-          id: localStorage.getItem('userId') || '',
-          attributes: {
-            device: localStorage.getItem('device') || '',
-            browser: localStorage.getItem('browser') || '',
-            os: localStorage.getItem('os') || '',
-            location: localStorage.getItem('user_country') || '',
-            ...customAttributes, // Spread custom attributes
-          }
-        }}
-      >
-        <ThemeProvider>
-          <AppContent />
-        </ThemeProvider>
-      </OptimizelyProvider>
+      <TemplateProvider>
+        <DynamicOptimizelyProvider
+          user={{
+            id: localStorage.getItem('userId') || '',
+            attributes: {
+              device: localStorage.getItem('device') || '',
+              browser: localStorage.getItem('browser') || '',
+              os: localStorage.getItem('os') || '',
+              location: localStorage.getItem('user_country') || '',
+              ...customAttributes, // Spread custom attributes
+            }
+          }}
+        >
+          <ThemeProvider>
+            <AppContent />
+          </ThemeProvider>
+        </DynamicOptimizelyProvider>
+      </TemplateProvider>
     </UserProvider>
   );
 };

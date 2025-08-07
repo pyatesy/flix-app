@@ -1,6 +1,6 @@
 import { useDecision } from '@optimizely/react-sdk';
 import { MovieData } from '../types/theme';
-import { movieDatabase, genres, actors } from '../data/movies';
+import { movieDatabase, genres, actors } from '../data/streaming/movies';
 
 // Helper function to convert JSON dates back to Date objects
 const convertJsonDatesToDates = (movies: any[]) => {

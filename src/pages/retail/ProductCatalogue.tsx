@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import RecommendedProductsCarousel from '../../components/retail/RecommendedProductsCarousel';
 import ProductList from '../../components/retail/ProductList';
@@ -71,7 +71,7 @@ const ProductCatalogue: React.FC = () => {
     const displayConfig = getDisplayConfig();
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid page-template-plp">
             <div className="row">
                 {/* Filters Sidebar */}
                 <div className="col-9 mx-auto">

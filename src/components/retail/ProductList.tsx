@@ -1,7 +1,20 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useProductData } from '../../hooks/useProductData';
-import { Product } from '../../data/retail/products';
+import { Product, StockLevel } from '../../data/retail/products';
+
+// Helper functions for stock management
+const getTotalStock = (stockLevels: StockLevel[]) => {
+  return stockLevels.reduce((total, stock) => total + stock.quantity, 0);
+};
+
+const isProductInStock = (stockLevels: StockLevel[]) => {
+  return getTotalStock(stockLevels) > 0;
+};
+
+const getAvailableSizes = (stockLevels: StockLevel[]) => {
+  return stockLevels.filter(stock => stock.quantity > 0);
+};
 
 export interface ProductListProps {
   categoryId?: number;
@@ -40,12 +53,6 @@ const ProductList: React.FC<ProductListProps> = ({
   limit 
 }) => {
   const { products, categories, brands } = useProductData();
-  const [localFilters, setLocalFilters] = useState<FilterState>({
-    brands: [],
-    featured: false,
-    inStock: false
-  });
-  const [localSort, setLocalSort] = useState<SortState>(sortBy);
   
   // State for image hover effects
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
@@ -140,7 +147,7 @@ const ProductList: React.FC<ProductListProps> = ({
     }
 
     // Apply filters
-    const activeFilters = { ...localFilters, ...filters };
+    const activeFilters = filters || { brands: [], categories: [], featured: false, inStock: false };
     
     if (activeFilters.priceRange) {
       filteredProducts = filteredProducts.filter(product => 
@@ -149,9 +156,9 @@ const ProductList: React.FC<ProductListProps> = ({
       );
     }
 
-    if (activeFilters.brands.length > 0) {
+    if (activeFilters.brands && activeFilters.brands.length > 0) {
       filteredProducts = filteredProducts.filter(product => 
-        activeFilters.brands.includes(product.brand)
+        activeFilters.brands!.includes(product.brand)
       );
     }
 
@@ -169,12 +176,12 @@ const ProductList: React.FC<ProductListProps> = ({
 
     if (activeFilters.inStock) {
       filteredProducts = filteredProducts.filter(product => 
-        product.stockLevel > 0
+        isProductInStock(product.stockLevel)
       );
     }
 
     // Sort products
-    const activeSort = { ...localSort, ...sortBy };
+    const activeSort = sortBy;
     filteredProducts.sort((a, b) => {
       const aValue = a[activeSort.field];
       const bValue = b[activeSort.field];
@@ -200,7 +207,7 @@ const ProductList: React.FC<ProductListProps> = ({
     }
 
     return filteredProducts;
-  }, [products, category, localFilters, localSort, filters, sortBy, limit]);
+  }, [products, categories, category, filters, sortBy, limit]);
 
   // Get brand name by ID
   const getBrandName = (brandId: number) => {
@@ -268,8 +275,11 @@ const ProductList: React.FC<ProductListProps> = ({
                           </small>
                         </p>
                         <p className="card-text">
-                          <small className={`badge bg-${product.stockLevel > 0 ? 'success' : 'danger'} text-white`}>
-                            {product.stockLevel > 0 ? `Available` : 'Out of stock'}
+                          <small className={`badge bg-${isProductInStock(product.stockLevel) ? 'success' : 'danger'} text-white`}>
+                            {isProductInStock(product.stockLevel) ? 
+                              `Available (${getAvailableSizes(product.stockLevel).length} sizes)` : 
+                              'Out of stock'
+                            }
                           </small>
                         </p>
                         {product.featured && (

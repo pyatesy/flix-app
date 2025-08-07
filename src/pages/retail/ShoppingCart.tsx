@@ -3,7 +3,7 @@ import RecommendedProductsCarousel from '../../components/retail/RecommendedProd
 
 const ShoppingCart : React.FC = () => {
     return (
-        <div>
+        <div className="container-fluid page-template-cart">
             <h1>Your Basket</h1>
             <RecommendedProductsCarousel />
         </div>

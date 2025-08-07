@@ -64,7 +64,7 @@ export const categories: Category[] = [
     slug: "womens",
     description: "Latest Womens Fashion",
     parentCategory: 0,
-    image: "/assets/img/categories/womens.jpg"
+    image: "https://images1.cmp.optimizely.com/assets/The+Flower+Power/Zz1kMGI2NTIwNjcyY2YxMWYwODMzNjFlMzNhZWY3MTY5NA=="
   },
   {
     id: 2,
@@ -96,7 +96,7 @@ export const categories: Category[] = [
     slug: "mens",
     description: "Latest Mens Fashion",
     parentCategory: 0,
-    image: "/assets/img/categories/mens.jpg"
+    image: "https://images3.cmp.optimizely.com/assets/The+Apex+Slimline/09b3af8a661f11f0bc5a8e9d719a61b1"
   },
   {
     id: 5,
@@ -113,6 +113,14 @@ export const categories: Category[] = [
     description: "Latest Casual Wear",
     image: "/assets/img/categories/casual-wear.jpg",
     parentCategory: 4
+  },
+  {
+    id: 7,
+    name: "Sale",
+    slug: "sale",
+    description: "Items on sale",
+    image: "/assets/img/categories/sale.jpg",
+    parentCategory: 0
   }
 ];
 

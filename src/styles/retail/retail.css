@@ -6,6 +6,8 @@
 
 /* Import retail component styles */
 @import './components/size-selection.css';
+@import './components/product-showcase.css';
+@import './components/hero-carousel.css';
 
 
 .body-bg{
@@ -14,14 +16,16 @@
 
 /* Color Overrides*/
 .btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  color: #000;
+  background-color: var(--primary-color)!important;
+  border-color: var(--primary-color)!important; 
+  color: #000!important;
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-color-hover);
-  border-color: var(--primary-color-hover);
+  background-color: var(--primary-color-hover)!important;
+  border-color: var(--primary-color-hover)!important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--shadow);
 }
 
 .btn-outline-primary {
@@ -53,6 +57,21 @@
     background: linear-gradient(135deg,var(--theme) 3%, var(--theme2) 45%, var(--theme3) 88%);
 }
 
+
+/*Hero Carousel*/
+.carousel-indicators {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+
+.carousel-indicators ::marker {
+  display: none;
+}
+
+.carousel-indicators li::marker {
+  content: none;
+}
+/*------*/
 
 .retail-header .navbar-brand {
   font-weight: bold;

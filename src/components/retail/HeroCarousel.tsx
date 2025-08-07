@@ -21,7 +21,7 @@ const HeroCarousel: React.FC = () => {
             key={index}
             data-bs-target="#heroCarousel" 
             data-bs-slide-to={index.toString()} 
-            className={index === 0 ? "active" : ""}
+            className={index === 0 ? "active bg-primary" : ""}
           ></li>
         ))}
       </ol>
@@ -29,21 +29,27 @@ const HeroCarousel: React.FC = () => {
         {featuredProducts.map((product, index) => (
           <div key={product.id} className={`carousel-item${index === 0 ? ' active' : ''}`}>
             <div className="row">
+  
               <div className="col-md-6">
+              <Link to={`/product/${product.slug}`} >
                 <img 
                   className="d-block w-100" 
                   src={product.heroImage || product.image || '/assets/img/placeholder.jpg'} 
                   alt={product.name} 
                 />
+                </Link>
               </div>
               <div className="col-md-6">                   
-                <div className="carousel-caption-right d-inline-block w-100 h-50 text-center p-5">
-                  <h2 className="d-block w-100 mt-2 fs-6">{product.name}</h2>
-                  <p>{product.description || 'No description available.'}</p>
-                  <Link to={`/product/${product.slug}`} className="btn btn-primary w-100">
+                <div className="carousel-caption-right d-inline-block w-50 p-5">
+                  <Link to={`/product/${product.slug}`} >
+                  <h2 className="d-block w-100 mt-2 fs-6">{product.name}</h2>                
+                  <p>{product.smallDescription || product.description || 'No description available.'}</p>
+                  </Link>
+                  <Link to={`/product/${product.slug}`} className="btn btn-primary w-50">
                     Shop Now
                   </Link>
                 </div>
+                <Link to={`/product/${product.slug}`} >
                 {product.productImages && product.productImages[0] && (
                   <img 
                     className="d-inline-block w-50" 
@@ -58,9 +64,18 @@ const HeroCarousel: React.FC = () => {
                     alt={`${product.name} - Image 3`} 
                   />
                 )}
+                 {product.productImages && product.productImages[2] && (
+                  <img 
+                    className="d-inline-block w-50" 
+                    src={product.productImages[3]} 
+                    alt={`${product.name} - Image 4`} 
+                  />
+                )}
+                                  </Link>
               </div>
             </div>
           </div>
+
         ))}
       </div>
       <button className="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">

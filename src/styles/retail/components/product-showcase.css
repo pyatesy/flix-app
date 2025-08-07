@@ -1,0 +1,177 @@
+/* Product Showcase Component Styles */
+.category-showcase {
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase-image-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.showcase-image-container:hover {
+  transform: translateY(-5px);
+}
+
+.showcase-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.showcase-image-container:hover .showcase-image {
+  transform: scale(1.05);
+}
+
+.showcase-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg, 
+    rgba(0, 0, 0, 0.3) 0%, 
+    rgba(0, 0, 0, 0.1) 50%, 
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.showcase-image-container:hover .showcase-overlay {
+  opacity: 1;
+}
+
+.showcase-content {
+  text-align: center;
+  padding: 2rem;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.showcase-image-container:hover .showcase-content {
+  transform: translateY(0);
+}
+
+.showcase-content h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.showcase-content p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+
+/* Category title styles */
+.category-showcase h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.category-showcase h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(45deg, var(--theme), var(--theme2));
+  border-radius: 2px;
+}
+
+/* Link styles */
+.category-showcase a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.category-showcase a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .showcase-image {
+    height: 300px;
+  }
+  
+  .category-showcase h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .showcase-content {
+    padding: 1rem;
+  }
+  
+  .showcase-content h4 {
+    font-size: 1.25rem;
+  }
+  
+  .showcase-content p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .showcase-image {
+    height: 250px;
+  }
+  
+  .category-showcase h3 {
+    font-size: 1.25rem;
+  }
+  
+  .showcase-content .btn {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation for category titles */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.category-showcase h3 {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.category-showcase:nth-child(2) h3 {
+  animation-delay: 0.2s;
+}
+
+/* Shadow effects */
+.showcase-image-container {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.showcase-image-container:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}

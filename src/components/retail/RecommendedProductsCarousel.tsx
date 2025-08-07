@@ -20,7 +20,7 @@ const RecommendedProductsCarousel: React.FC = () => {
   }
 
   return (
-    <div className="container-fluid my-5">
+    <div className="recommended-products-carousel container-fluid my-5">
       <h2 className="text-center mb-4">Recommended Products</h2>
       <div id="recommendedCarousel" className="carousel slide recommended-carousel" data-bs-ride="carousel">
         <div className="carousel-inner">

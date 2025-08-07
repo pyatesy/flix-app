@@ -54,7 +54,7 @@ const ProductShowcase: React.FC = () => {
   }, [products, categories]);
 
   return (
-    <div className="container-fluid my-5" style={{ height: '800px' }}>
+    <div className="product-showcase container-fluid my-5" style={{ height: '800px' }}>
       <div className="row justify-content-center" style={{ height: '100%' }}>
         {/* Mens Category Showcase */}
         <div className="col-md-4 mb-4" style={{ height: '100%' }}>

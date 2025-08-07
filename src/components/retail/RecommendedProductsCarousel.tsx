@@ -26,7 +26,7 @@ const RecommendedProductsCarousel: React.FC = () => {
         <div className="carousel-inner">
           {slides.map((slide, slideIndex) => (
             <div key={slideIndex} className={`carousel-item ${slideIndex === 0 ? 'active' : ''}`}>
-              <div className="row justify-content-center">
+              <div className="row justify-content-center recommended-carousel-item-container">
                 {slide.map((product) => (
                   <div key={product.id} className="col-md-4">
                     <div className="card">

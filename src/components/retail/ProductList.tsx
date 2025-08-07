@@ -228,9 +228,9 @@ const ProductList: React.FC<ProductListProps> = ({
   };
 
   return (
-    <div className={`container-fluid ${category?.name?.toLowerCase().replace(/\s+/g, '-') || 'all-products'}`}>
+    <div className={`product-list container-fluid ${category?.name?.toLowerCase().replace(/\s+/g, '-') || 'all-products'}`}>
       <div className="row">
-        <div className="col-12">
+        <div className="col-12 product-list-container">
           {category && (
             <div className="mb-4">
               <p className="text">
@@ -248,7 +248,7 @@ const ProductList: React.FC<ProductListProps> = ({
           
           <div className="row">
             {filteredAndSortedProducts.map((product) => (
-              <div key={product.id} className="col-md-3 mb-4">
+              <div key={product.id} className="col-md-3 mb-4 product-card-container">
                 <Link to={`/product/${product.slug}`}>
                   <div className="product-card card h-100 bg-dark rounded rounded-4">
                     <img 

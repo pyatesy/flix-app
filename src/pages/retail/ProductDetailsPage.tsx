@@ -69,7 +69,7 @@ const ProductDetailsPage: React.FC = () => {
   // Handle product not found
   if (!product) {
     return (
-      <div className="container my-5">
+      <div className="container my-5 page-template-pdp">
         <div className="text-center">
           <h2>Product Not Found</h2>
           <p className="text-muted">The product you're looking for doesn't exist.</p>
@@ -88,7 +88,7 @@ const ProductDetailsPage: React.FC = () => {
   const productImages: string[] = product.productImages || [product.image];
 
   return (
-    <div className="container-fluid my-5">
+    <div className="container-fluid my-5 page-template-pdp">
       <div className="row">
         {/* Thumbnails - 3 columns */}
         <div className="col-md-2 d-flex flex-column align-items-center">
@@ -146,10 +146,10 @@ const ProductDetailsPage: React.FC = () => {
 
         {/* Product Info - 3 columns */}
         <div className="col-md-4">
-          <h1 className="display-4">{product.name}</h1>
+          <h1 className="display-4 pdp-product-name">{product.name}</h1>
           {/* Price Section */}
           <div className="mb-4">
-            <h3 className="text-primary">${product.price.toLocaleString()}</h3>
+            <h3 className="text-primary pdp-product-price">${product.price.toLocaleString()}</h3>
             {product.originalPrice && product.originalPrice > product.price && (
               <span className="text-muted text-decoration-line-through">
                 ${product.originalPrice.toLocaleString()}
@@ -157,7 +157,7 @@ const ProductDetailsPage: React.FC = () => {
             )}
           </div>
           {/* Brand */}
-          <p className="text-white  mb-3">
+          <p className="text-white pdp-product-brand mb-3">
             Brand: <strong>{getBrandName(product.brand)}</strong>
           </p>
           {/* Categories */}
@@ -168,7 +168,7 @@ const ProductDetailsPage: React.FC = () => {
           )}
           {/* Size Selection */}
           <div className="mb-4">
-            <h5 className="text-white mb-3">Select Size:</h5>
+            <h5 className="text-white mb-3 pdp-product-size-label">Select Size:</h5>
             <div className="size-selection d-flex flex-wrap gap-2">
               {product.stockLevel.map((stock: StockLevel) => (
                 <button
@@ -188,7 +188,7 @@ const ProductDetailsPage: React.FC = () => {
           <div className="mb-4">
             {selectedSize ? (
               <div>
-                <span className={`badge bg-${isSizeAvailable(product.stockLevel, selectedSize) ? 'primary' : 'danger'} text-white me-2`}>
+                <span className={`badge bg-${isSizeAvailable(product.stockLevel, selectedSize) ? 'success' : 'danger'} text-white me-2`}>
                   {isSizeAvailable(product.stockLevel, selectedSize) ? `Size ${selectedSize} - In Stock` : `Size ${selectedSize} - Out of Stock`}
                 </span>
                 {isSizeAvailable(product.stockLevel, selectedSize) && (

@@ -115,7 +115,7 @@ export const categories: Category[] = [
     parentCategory: 4
   },
   {
-    id: 7,
+    id: 9,
     name: "Sale",
     slug: "sale",
     description: "Items on sale",
@@ -162,7 +162,7 @@ export const products: Product[] = [
     smallDescription: "The Apex Slimline Ensemble redefines modern elegance with its sharp, sculpted silhouette and classic lines. Crafted from premium, breathable fabrics, it offers unparalleled comfort and a distinguished aesthetic for the contemporary gentleman.",
     originalPrice: 2800.00,
     slug: "the-apex-slimline-ensemble",
-    price: 2800.00,
+    price: 2600.00,
     brand: 2,
     image: "https://images3.cmp.optimizely.com/assets/The+Apex+Slimline/09b3af8a661f11f0bc5a8e9d719a61b1",
     carouselImage: "https://images3.cmp.optimizely.com/assets/The+Apex+Slimline/09edb234661f11f0bc5a8e9d719a61b1",
@@ -174,7 +174,7 @@ export const products: Product[] = [
       "https://images3.cmp.optimizely.com/assets/The+Apex+Slimline/09b58e40661f11f0ad657614976283e1",
       "https://images3.cmp.optimizely.com/assets/The+Apex+Slimline/09b5c81a661f11f0bc5a8e9d719a61b1"
     ],
-    category: [5],
+    category: [5,9],
     rating: 0,
     stockLevel: [
       { size: "36", quantity: 12 },
@@ -194,7 +194,7 @@ export const products: Product[] = [
     smallDescription: "A refined men's suit in a rich coffee mocha hue, crafted from fine Italian wool. Impeccable cut and fluid drape for a commanding silhouette. Perfect for high-stakes meetings or exclusive evening events, embodying unparalleled taste and confident ambition.",
     originalPrice: 2800.00,
     slug: "the-mocha-regent-suit",
-    price: 2800.00,
+    price: 2200.00,
     brand: 2,
     image: "https://images1.cmp.optimizely.com/assets/The+Mocha+Regent/Zz0xMWE2NTZhMDY2MjExMWYwOTY2MmM2NjUzZDE1YWQ2Yw==",
     carouselImage: "https://images1.cmp.optimizely.com/assets/The+Mocha+Regent/Zz0xMWE2NTZhMDY2MjExMWYwOTY2MmM2NjUzZDE1YWQ2Yw==",
@@ -206,7 +206,7 @@ export const products: Product[] = [
     "https://images3.cmp.optimizely.com/assets/The+Mocha+Regent/256aea3e662111f0bc5a8e9d719a61b1",
     "https://images3.cmp.optimizely.com/assets/The+Mocha+Regent/257048bc662111f0ad657614976283e1"
     ],
-    category: [5],
+    category: [5,9],
     rating: 0,
     stockLevel: [
       { size: "36", quantity: 8 },
@@ -318,7 +318,7 @@ export const products: Product[] = [
     description: "Unleash your inner wild elegance with The Savannah Siren Gown, a bridal masterpiece that redefines traditional beauty with a daring twist. This captivating gown features an exquisite tiger stripe meshing that gracefully adorns the entire garment, creating a mesmerizing interplay of texture and pattern. The intricate meshing, subtly integrated into the design, offers a unique blend of sophistication and untamed allure, ensuring you stand out with unparalleled confidence. Crafted with meticulous attention to detail and from the finest materials, this gown flows with a luxurious drape, accentuating your silhouette with every step. The Savannah Siren Gown is more than just a dress; it is a bold statement of individuality, a celebration of fierce beauty, and a testament to the innovative spirit of haute couture, perfect for the bride who dares to be unforgettable.",
     originalPrice: 28000.00,
     slug: "The-Savannah-Siren-Gown",
-    price: 28000.00,
+    price: 25000.00,
     brand: 2,
     image: "https://images3.cmp.optimizely.com/assets/The+Savannah+Siren/Zz0yZWVmMzY3YTYzYzIxMWYwOTUzYzU2YjFjNmFiYjBhZQ==",
     carouselImage: "https://images3.cmp.optimizely.com/assets/The+Savannah+Siren/Zz0yZWVmMzY3YTYzYzIxMWYwOTUzYzU2YjFjNmFiYjBhZQ==",
@@ -330,7 +330,7 @@ export const products: Product[] = [
       "https://images4.cmp.optimizely.com/assets/The+Savannah+Siren/Zz0zZjZkYTcwYzYzYzIxMWYwYjlkZmI2MGZjY2M0YzRkYg==",
       "https://images4.cmp.optimizely.com/assets/The+Savannah+Siren/Zz00NjFlNzZlNDYzYzIxMWYwOWUxOWNhNTcyNzI3ZTIxYg=="
     ],
-    category: [7],
+    category: [7,9],
     rating: 0,
     stockLevel: [
       { size: "XS", quantity: 6 },
@@ -349,7 +349,7 @@ export const products: Product[] = [
       smallDescription: "The Executive Aura Suit redefines professional elegance for the modern woman. This single-breasted masterpiece, crafted from the finest fabrics, offers a sleek silhouette and impeccable cut. Designed to inspire confidence and command respect, it's perfect for high-stakes professional settings, embodying refined power and timeless style.",
       originalPrice: 1850.00,
       slug: "the-executive-aura-suit",
-      price: 1850.00,
+      price: 1550.00,
       brand: 2,
       image: "https://images1.cmp.optimizely.com/assets/The+Executive+Aura/Zz03MWM0ZjNlYzcyY2YxMWYwYTZkMGZlYTY0OTU0NGZmOA==",
       carouselImage: "https://images1.cmp.optimizely.com/assets/The+Executive+Aura/Zz03MWM0ZjNlYzcyY2YxMWYwYTZkMGZlYTY0OTU0NGZmOA==",
@@ -361,7 +361,7 @@ export const products: Product[] = [
         "https://images4.cmp.optimizely.com/assets/The+Executive+Aura/Zz03MTc3ZTBhYzcyY2YxMWYwYTVkODcyMGI4Y2U1YzYyMw==", 
         "https://images3.cmp.optimizely.com/assets/The+Executive+Aura/Zz03MTY5YmI0ZTcyY2YxMWYwYTM4NTEyYThmZjIyYzcxYQ==", 
       ],
-      category: [2],
+      category: [2,9],
       rating: 0,
       stockLevel: [
         { size: "XS", quantity: 12 },
@@ -469,8 +469,182 @@ export const products: Product[] = [
       { size: "XXL", quantity: 6 }
     ],
     featured: true
-  }
-
+  },
+  {
+    id: 100600,
+    name: "The Business Casual",
+    description: "The Business Casual is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    smallDescription: "The Business Casual is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    originalPrice: 500.00,
+    slug: "the-business-casual",
+    price: 400,
+    brand: 2,
+    image: "https://images3.cmp.optimizely.com/assets/The+Business+Casual/Zz1lZjVlZTA3NjgzMjExMWYwYTgzMjE2OTFjNTc2MjhkYQ==",
+    carouselImage: "",
+    heroImage: "",
+    productImages: [
+      "https://images4.cmp.optimizely.com/assets/The+Business+Casual/Zz1mNTFiYWFiMjgzMjExMWYwOThlYzcyNGQ2YmJhMThhZg==",
+      "https://images3.cmp.optimizely.com/assets/The+Business+Casual/Zz1mN2UyMTQ4NDgzMjExMWYwYTk4YjE2OTFjNTc2MjhkYQ==",
+      "https://images3.cmp.optimizely.com/assets/The+Business+Casual/Zz1mN2UyMWUwYzgzMjExMWYwYjMwNjllNmYyMDU0N2U4YQ==",
+      "https://images3.cmp.optimizely.com/assets/The+Business+Casual/Zz1lZjkyZGIyZTgzMjExMWYwYTk4YjE2OTFjNTc2MjhkYQ==",
+      "https://images1.cmp.optimizely.com/assets/The+Business+Casual/Zz1mMzYwZGE1ODgzMjExMWYwYjM1YzRhMGJhODQ3N2Q5MA=="
+    ],
+    category: [6,9],
+    rating: 0,
+    stockLevel: [
+      { size: "36", quantity: 15 },
+      { size: "38", quantity: 25 },
+      { size: "40", quantity: 30 },
+      { size: "42", quantity: 20 },
+      { size: "44", quantity: 10 }
+    ],
+    featured: false
+  },
+  {
+    id: 100601,
+    name: "The Start Up Suit",
+    description: "The Start Up Suit is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    smallDescription: "The Start Up Suit is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    originalPrice: 500.00,
+    slug: "the-start-up-suit",
+    price: 100,
+    brand: 2,
+    image: "https://images3.cmp.optimizely.com/assets/The+Start+Up+Suit/Zz1jMjNiODRmYTgzMjExMWYwODM3YjllNmYyMDU0N2U4YQ==",
+    carouselImage: "https://images3.cmp.optimizely.com/assets/The+Start+Up+Suit/Zz1jMjNiODRmYTgzMjExMWYwODM3YjllNmYyMDU0N2U4YQ==",
+    heroImage: "https://images3.cmp.optimizely.com/assets/The+Start+Up+Suit/Zz1jMjNiODRmYTgzMjExMWYwODM3YjllNmYyMDU0N2U4YQ==",
+    productImages: [
+      "https://images3.cmp.optimizely.com/assets/The+Start+Up+Suit/Zz1jM2U5YWM2NDgzMjExMWYwYWY4NjllNmYyMDU0N2U4YQ==",
+      "https://images3.cmp.optimizely.com/assets/The+Start+Up+Suit/Zz1jNTIzMGYxMjgzMjExMWYwYTgzMjE2OTFjNTc2MjhkYQ==",
+      "https://images1.cmp.optimizely.com/assets/The+Start+Up+Suit/Zz1jNzFmYjhiYTgzMjExMWYwOTkwZmQ2MjIwN2IyOWNlNA==",
+      "https://images3.cmp.optimizely.com/assets/The+Start+Up+Suit/Zz1jM2ZjYmYzZTgzMjExMWYwYmJmMzhlNTVlNWI0MTE5ZQ==",
+      "https://images3.cmp.optimizely.com/assets/The+Start+Up+Suit/Zz1jNzNjYjhmYzgzMjExMWYwOGVlNzE2OTFjNTc2MjhkYQ=="
+    ],
+    category: [6,9],
+    rating: 0,
+    stockLevel: [
+      { size: "36", quantity: 15 },
+      { size: "38", quantity: 25 },
+      { size: "40", quantity: 30 },
+      { size: "42", quantity: 20 },
+      { size: "44", quantity: 10 }
+    ],
+    featured: false
+  },  
+  {
+    id: 100602,
+    name: "The Everyday Ensemble",
+    description: "The Everyday Ensemble is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    smallDescription: "The Everyday Ensemble is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    originalPrice: 500.00,
+    slug: "the-everyday-ensemble",
+    price: 200,
+    brand: 2,
+    image: "https://images1.cmp.optimizely.com/assets/The+Everyday+Ensemble/Zz03NGZjMmViMDgzMjExMWYwOGY3OWQ2MjIwN2IyOWNlNA==",
+    carouselImage: "https://images1.cmp.optimizely.com/assets/The+Everyday+Ensemble/Zz03NGZjMmViMDgzMjExMWYwOGY3OWQ2MjIwN2IyOWNlNA==",
+    heroImage: "https://images1.cmp.optimizely.com/assets/The+Everyday+Ensemble/Zz03NGZjMmViMDgzMjExMWYwOGY3OWQ2MjIwN2IyOWNlNA==",
+    productImages: [
+      "https://images1.cmp.optimizely.com/assets/The+Everyday+Ensemble/Zz03OTc5MmYzODgzMjExMWYwYjM1YzRhMGJhODQ3N2Q5MA==",
+      "https://images3.cmp.optimizely.com/assets/The+Everyday+Ensemble/Zz03NmEwY2FlNjgzMjExMWYwOGQwMThlNTVlNWI0MTE5ZQ==",
+      "https://images1.cmp.optimizely.com/assets/The+Everyday+Ensemble/Zz03OGJjNjdhZTgzMjExMWYwOWQxMjRhMGJhODQ3N2Q5MA==",
+      "https://images3.cmp.optimizely.com/assets/The+Everyday+Ensemble/Zz03OTYwZjUzMDgzMjExMWYwYjMwNjllNmYyMDU0N2U4YQ==",
+      "https://images1.cmp.optimizely.com/assets/The+Everyday+Ensemble/Zz03NGZmMTY3YTgzMjExMWYwOWQxMjRhMGJhODQ3N2Q5MA=="
+     ],
+    category: [6,9],
+    rating: 0,
+    stockLevel: [
+      { size: "36", quantity: 15 },
+      { size: "38", quantity: 25 },
+      { size: "40", quantity: 30 },
+      { size: "42", quantity: 20 },
+      { size: "44", quantity: 10 }
+    ],
+    featured: false
+  },  {
+    id: 100603,
+    name: "The Jean Collection",
+    description: "The Jean Collection is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    smallDescription: "The Jean Collection is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    originalPrice: 500.00,
+    slug: "the-jean-collection",
+    price: 300,
+    brand: 2,
+    image: "https://images3.cmp.optimizely.com/assets/The+Jean+Collection/Zz0yNzBhNWNjYzgzMjExMWYwYWY4NjllNmYyMDU0N2U4YQ==",
+    carouselImage: "https://images3.cmp.optimizely.com/assets/The+Jean+Collection/Zz0yNzBhNWNjYzgzMjExMWYwYWY4NjllNmYyMDU0N2U4YQ==",
+    heroImage: "https://images3.cmp.optimizely.com/assets/The+Jean+Collection/Zz0yNzBhNWNjYzgzMjExMWYwYWY4NjllNmYyMDU0N2U4YQ==",
+    productImages: [
+      "https://images3.cmp.optimizely.com/assets/The+Jean+Collection/Zz0yNDQyOGYwYTgzMjExMWYwODM3YjllNmYyMDU0N2U4YQ==",
+      "https://images4.cmp.optimizely.com/assets/The+Jean+Collection/Zz0yNmQxZmFlZTgzMjExMWYwYjU2NjcyNGQ2YmJhMThhZg==",
+      "https://images3.cmp.optimizely.com/assets/The+Jean+Collection/Zz0yNTk5YzJkODgzMjExMWYwYjMwNjllNmYyMDU0N2U4YQ==",
+      "https://images3.cmp.optimizely.com/assets/The+Jean+Collection/Zz0yMmZlZWFlNDgzMjExMWYwYTk4YjE2OTFjNTc2MjhkYQ==",
+      "https://images1.cmp.optimizely.com/assets/The+Jean+Collection/Zz0yODgzMjk0ZTgzMjExMWYwOGY3OWQ2MjIwN2IyOWNlNA=="
+     ],
+    category: [6,9],
+    rating: 0,
+    stockLevel: [
+      { size: "36", quantity: 15 },
+      { size: "38", quantity: 25 },
+      { size: "40", quantity: 30 },
+      { size: "42", quantity: 20 },
+      { size: "44", quantity: 10 }
+    ],
+    featured: false
+  },  {
+    id: 100604,
+    name: "The Timepiece Collection",
+    description: "The Timepiece Collection is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    smallDescription: "The Timepiece Collection is a sophisticated and versatile ensemble designed for the modern professional. This tailored suit combines a classic blazer with a relaxed trouser, offering a perfect balance of comfort and style. Crafted from premium fabrics, it ensures both comfort and a polished appearance, making it ideal for both professional and casual settings. The tailored design and premium materials make it a must-have for any professional wardrobe.",
+    originalPrice: 500.00,
+    slug: "the-timepiece-collection",
+    price: 500,
+    brand: 2,
+    image: "https://images3.cmp.optimizely.com/assets/The+Time+Collection/Zz1hZWZlNWUwZTgzMjAxMWYwYTgzMjE2OTFjNTc2MjhkYQ==",
+    carouselImage: "https://images3.cmp.optimizely.com/assets/The+Time+Collection/Zz1hZWZlNWUwZTgzMjAxMWYwYTgzMjE2OTFjNTc2MjhkYQ==",
+    heroImage: "https://images3.cmp.optimizely.com/assets/The+Time+Collection/Zz1hZWZlNWUwZTgzMjAxMWYwYTgzMjE2OTFjNTc2MjhkYQ==",
+    productImages: [
+      "https://images3.cmp.optimizely.com/assets/The+Time+Collection/Zz1iMTE4ZjA1YTgzMjAxMWYwOTkwNTZlZmM5YzE0OTI0ZQ==",
+      "https://images1.cmp.optimizely.com/assets/The+Time+Collection/Zz1iMjI0MzAzNjgzMjAxMWYwOGY3OWQ2MjIwN2IyOWNlNA==",
+      "https://images3.cmp.optimizely.com/assets/The+Time+Collection/Zz1hZTkxZGIwODgzMjAxMWYwOTkwNTZlZmM5YzE0OTI0ZQ==",
+      "https://images1.cmp.optimizely.com/assets/The+Time+Collection/Zz1iMTQ2ZTk2YTgzMjAxMWYwYTQ2YzRhMGJhODQ3N2Q5MA==",
+      "https://images1.cmp.optimizely.com/assets/The+Time+Collection/Zz1iMWU5NTYzYzgzMjAxMWYwYjM1YzRhMGJhODQ3N2Q5MA=="
+     ],
+    category: [6],
+    rating: 0,
+    stockLevel: [
+      { size: "36", quantity: 15 },
+      { size: "38", quantity: 25 },
+      { size: "40", quantity: 30 },
+      { size: "42", quantity: 20 },
+      { size: "44", quantity: 10 }
+    ],
+    featured: false
+  }/*,  
+  {
+    id: 100601,
+    name: "The ",
+    description: "",
+    smallDescription: "",
+    originalPrice: 500.00,
+    slug: "",
+    price: 2500,
+    brand: 2,
+    image: "",
+    carouselImage: "",
+    heroImage: "",
+    productImages: [
+      "",
+     ],
+    category: [6],
+    rating: 0,
+    stockLevel: [
+      { size: "36", quantity: 15 },
+      { size: "38", quantity: 25 },
+      { size: "40", quantity: 30 },
+      { size: "42", quantity: 20 },
+      { size: "44", quantity: 10 }
+    ],
+    featured: false
+  },*/
+  
   /*{
     id: 206,
     name: "The Chronos Executive Suit",
